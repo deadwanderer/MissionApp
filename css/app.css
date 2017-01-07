@@ -1,0 +1,13 @@
+.myProgress {
+    float: right;
+    margin-right: 250px;
+    position: relative;
+    width: 250px;
+    height: 25px;
+    background-color: grey;
+}
+.myBar {
+    position: absolute;
+    height: 100%;
+    background-color: limegreen;
+}

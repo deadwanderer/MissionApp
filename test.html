@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script type="text/javascript">
+        window.addEventListener("onContextMenu", function() {
+            return false;
+        });
+    </script>
+</head>
+<body>
+    <input type="text" id="x" /><br>
+    <input type="text" id="y" /><br>
+    <button name="button" onclick="calc()">Click</button><br />
+    <div id="result"></div>
+
+    <script type="text/javascript">
+        function calc() {
+            var x = document.getElementById("x").value || 0;
+            var y = document.getElementById("y").value || 0;
+            console.log("x: " + x + ", y: " + y);
+            console.log("y << 16: " + ((y << 16) >>> 0).toString(2));
+
+            document.getElementById("result").innerHTML = hashPair(x, y);
+        }
+
+        function hashPair(x, y) {
+            return (y << 16) ^ x;
+        }
+
+    </script>
+</body>
+</html>
