@@ -20,6 +20,12 @@ var App = {
         Gold: 0
     },
 
+    LogLines: [],
+    LogID: 0,
+    LogFadeAfterTime: 10,
+    LogFadeTime: 2000,
+    LogMaxLength: 15,
+
     ResourceType: ["Stone", "Food", "Leather", "Gold"],
 
     Ticker: null,
@@ -45,10 +51,12 @@ var App = {
         elapsedSinceSpawn: 0,
     },
 
-    LogItems: [],
-
     Init: function() {
-        App.Time.currTime = App.Time.lastTime = Date.now();
+        App.Time.currTime = Date.now();
+        App.Time.lastTime = Date.now();
+        $("#log").on("wheel", function() {
+            App.RefreshLogDraw();
+        });
         App.SpawnCounter();
         if (App.Ticker === null) {
             App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
@@ -78,6 +86,7 @@ var App = {
 
     Logic: function() {
         App.UpdateTimers();
+        App.CullLog();
         if (App.Time.elapsedSinceSpawn > App.Time.spawnTime) {
             App.SpawnCounter();
             App.Time.elapsedSinceSpawn = 0;
@@ -88,6 +97,7 @@ var App = {
         App.DrawCounters();
         App.DrawResources();
         App.DrawTitle();
+        App.DrawLog();
     },
 
     DrawTitle: function() {
@@ -119,6 +129,32 @@ var App = {
             text += "</td></tr>";
         }
         document.getElementById("resourceList").innerHTML = text;
+    },
+
+    DrawLog: function() {
+        for (var i = 0; i < App.LogLines.length; i++) {
+            App.LogLines[i].time -= App.Time.deltaTime;
+            if (App.LogLines[i].time <= 0) {
+                $("#" + App.LogLines[i].id).triggerHandler("click");
+            }
+        }
+    },
+
+    CullLog: function() {
+        if (App.LogLines.length > App.LogMaxLength) {
+            while (App.LogLines.length > App.LogMaxLength) {
+                $("#" + App.LogLines[0].id).remove();
+                App.LogLines.splice(0, 1);
+            }
+        }
+    },
+
+    RefreshLogDraw: function() {
+        for (var i = 0; i < App.LogLines.length; i++) {
+            $("#" + App.LogLines[i].id).stop();
+            App.LogLines[i].time = App.LogFadeAfterTime * App.Time.seconds;
+            $("#" + App.LogLines[i].id).fadeIn(1);
+        }
     },
 
     Loop: function() {
@@ -166,7 +202,7 @@ var App = {
 
     AddResources: function(counter) {
         App.ResourceList[counter.getResources().getName()] += counter.getResources().getAmount();
-        console.log(counter.getResources().getName() + ": " + counter.getResources().getAmount());
+        App.Log("Received " + counter.getResources().getAmount() + " " + counter.getResources().getName());
     },
 
     SpawnCounter: function() {
@@ -175,13 +211,23 @@ var App = {
         var resAmt = Math.floor(Math.random() * (App.Resources.resourceMax - App.Resources.resourceMin + 1) + App.Resources.resourceMin) * App.Resources.resourceMult;
         var resName = App.ResourceType[Math.floor(Math.random() * App.ResourceType.length)];
         var res = new App.Resource(resName, resAmt);
-        console.log(resAmt);
         var counter = new App.Counter(name, time, res, App.AddResources);
         App.Counters.push(counter);
+        App.Log("Spawned new Counter " + name + ", lasting " + timeFormat(time) + ", bringing back " + resAmt + " " + resName+ ".");
     },
 
-    Log: function() {
-
+    Log: function(text) {
+        id = "Log" + App.LogID++;
+        App.LogLines.push({id: id, time: App.LogFadeAfterTime * App.Time.seconds});
+        para = document.createElement("P");
+        para.id = id;
+        line = document.createTextNode(text);
+        para.appendChild(line);
+        log = document.getElementById("log");      
+        log.insertBefore(para, log.childNodes[0]);
+        $("#" + id).on("click", function() {
+            $(this).fadeOut(App.LogFadeTime);
+        });
     }
 };
 
@@ -193,3 +239,5 @@ window.addEventListener('focus', function() {
 window.addEventListener('blur', function() {
     App.Params.Focused = false;
 }, false);
+
+window.onload = App.Init();
