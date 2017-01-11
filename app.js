@@ -151,9 +151,10 @@ var App = {
 
     RefreshLogDraw: function() {
         for (var i = 0; i < App.LogLines.length; i++) {
-            $("#" + App.LogLines[i].id).stop();
-            App.LogLines[i].time = App.LogFadeAfterTime * App.Time.seconds;
-            $("#" + App.LogLines[i].id).fadeIn(1);
+            if ($("#" + App.LogLines[i].id).is(':animated')) {
+                $("#" + App.LogLines[i].id).stop().animate({opacity:'100'});
+            }
+            App.LogLines[i].time = App.LogFadeAfterTime * App.Time.seconds;            
         }
     },
 
