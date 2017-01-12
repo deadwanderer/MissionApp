@@ -57,6 +57,9 @@ var App = {
         $("#log").on("wheel", function() {
             App.RefreshLogDraw();
         });
+        $("#log").on("scroll", function() {
+            App.RefreshLogDraw();
+        });
         App.SpawnCounter();
         if (App.Ticker === null) {
             App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
@@ -135,8 +138,18 @@ var App = {
         for (var i = 0; i < App.LogLines.length; i++) {
             App.LogLines[i].time -= App.Time.deltaTime;
             if (App.LogLines[i].time <= 0) {
-                $("#" + App.LogLines[i].id).triggerHandler("click");
+                App.LogLines[i].fading = true;
             }
+            if (App.LogLines[i].fading) {
+                App.LogLines[i].fadeTime -= App.Time.deltaTime;
+                App.LogLines[i].opacity = App.LogLines[i].fadeTime / App.LogFadeTime;                
+                if (App.LogLines[i].opacity <= 0.0) {
+                    App.LogLines[i].opacity = 0.0;
+                    App.LogLines[i].faded = true;
+                    App.LogLines[i].fading = false;
+                }                
+            }
+            document.getElementById(App.LogLines[i].id).style.opacity = App.LogLines[i].opacity;
         }
     },
 
@@ -151,10 +164,15 @@ var App = {
 
     RefreshLogDraw: function() {
         for (var i = 0; i < App.LogLines.length; i++) {
-            if ($("#" + App.LogLines[i].id).is(':animated')) {
-                $("#" + App.LogLines[i].id).stop().animate({opacity:'100'});
+            if (App.LogLines[i].fading) {
+                App.LogLines[i].fading = false;                
             }
-            App.LogLines[i].time = App.LogFadeAfterTime * App.Time.seconds;            
+            if (App.LogLines[i].faded) {
+                App.LogLines[i].faded = false;
+            }
+            App.LogLines[i].time = App.LogFadeAfterTime * App.Time.seconds;
+            App.LogLines[i].fadeTime = App.LogFadeTime;
+            App.LogLines[i].opacity = 1.0;     
         }
     },
 
@@ -219,17 +237,14 @@ var App = {
 
     Log: function(text) {
         id = "Log" + App.LogID++;
-        App.LogLines.push({id: id, time: App.LogFadeAfterTime * App.Time.seconds});
+        index = App.LogLines.push({id: id, time: App.LogFadeAfterTime * App.Time.seconds, opacity: 1.0, fadeTime: App.LogFadeTime, fading: false, faded: false}) - 1;
         para = document.createElement("P");
         para.id = id;
         line = document.createTextNode(text);
         para.appendChild(line);
         log = document.getElementById("log");      
         log.insertBefore(para, log.childNodes[0]);
-        $("#" + id).on("click", function() {
-            $(this).fadeOut(App.LogFadeTime);
-        });
-    }
+    }, 
 };
 
 window.addEventListener('focus', function() {
