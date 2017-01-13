@@ -140,7 +140,7 @@ var App = {
                 + lerpColor(1, 0, App.FlashTime * App.FlashTime, counter.flashTime * counter.flashTime, true) + ";'></div></div></td></tr>";
             }
         }
-        document.getElementById("missionList").innerHTML = text;
+        document.getElementById("activeMissionList").innerHTML = text;
     },
 
     DrawResources: function() {
@@ -269,7 +269,20 @@ var App = {
         para.appendChild(line);
         log = document.getElementById("log");      
         log.insertBefore(para, log.childNodes[0]);
-    }, 
+    },
+
+    ShowModal: function() {
+        vex.dialog.alert({ unsafeMessage: "<div class='myProgress' onclick='App.ShowSecondModal();'><div class='myBar' style='width:24%;'></div><span class='barText'>24%</span></div>"});
+    },
+
+    ShowSecondModal: function() {
+        vex.dialog.confirm({
+            message: "Just testing!",
+            callback: function() {
+                console.log("Second modal called back!");
+            }
+        });
+    },
 };
 
 window.addEventListener('focus', function() {
