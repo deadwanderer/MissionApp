@@ -4,7 +4,8 @@ var App = {
     },
 
     Counters: [],
-
+    FlashTime: 250,
+    FlashHeight: 50,
     CounterNum: 0,
 
     Resources: {
@@ -41,7 +42,7 @@ var App = {
         minutes: 60 * this.seconds,
         hours: 60 * this.minutes,
         days: 24 * this.hours,
-        timeMax: 20,
+        timeMax: 25,
         timeMin: 3,
         RandomTime: function() {
             return Math.floor(Math.random() * (this.timeMax  - this.timeMin + 1) + this.timeMin) * this.seconds;
@@ -79,6 +80,9 @@ var App = {
             counter = App.Counters[i];
             counter.elapsedTime += App.Time.deltaTime;
             if (counter.elapsedTime >= counter.runTime) {
+                counter.flashTime += App.Time.deltaTime;                
+            }
+            if (counter.flashTime >= App.FlashTime) {
                 if (counter.func) {
                     counter.func(counter);
                 }
@@ -116,8 +120,25 @@ var App = {
             text += "</td><td>";
             text += timeFormat(counter.runTime);
             text += "</td><td>";
-            width = Math.round(((counter.runTime - counter.elapsedTime) / counter.runTime) * 100);
-            text += "<div class='myProgress'><div class='myBar' style='width:" + width + "%;'></div></div></td></tr>";
+            if (counter.elapsedTime <= counter.runTime) {
+                width = (counter.elapsedTime / counter.runTime) * 100;
+                textWidth = Math.round(width);
+                text += "<div class='myProgress'><div class='myBar' style='width:" + width + "%;'></div><span class='barText'>"
+                + (textWidth > 100 ? 100 : textWidth) + "%</span></div></td></tr>";
+            }
+            else if (counter.flashTime <= App.FlashTime) {
+                heightAdd = Math.round((counter.flashTime / App.FlashTime) * App.FlashHeight);
+                width = 250 + heightAdd;
+                height = 25 + heightAdd;
+                margin = heightAdd / 2;
+                text += "<div class='myProgress flashProgress' style='height:" + height + "px; width:" 
+                + width + "px; margin:-" + margin + "px -" + margin 
+                + "px;'><div class='myBar flashBar' style='width:100%;background-color:rgb(" 
+                + lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false) + ","
+                + lerpColor(205, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false) + ","
+                + lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false) + ");opacity:"
+                + lerpColor(1, 0, App.FlashTime * App.FlashTime, counter.flashTime * counter.flashTime, true) + ";'></div></div></td></tr>";
+            }
         }
         document.getElementById("missionList").innerHTML = text;
     },
@@ -135,6 +156,9 @@ var App = {
     },
 
     DrawLog: function() {
+        if (App.LogLines.length > App.LogMaxLength) {
+            App.CullLog();
+        }
         for (var i = 0; i < App.LogLines.length; i++) {
             App.LogLines[i].time -= App.Time.deltaTime;
             if (App.LogLines[i].time <= 0) {
@@ -193,6 +217,7 @@ var App = {
         this.runTime = time;
         this.startTime = Date.now();
         this.elapsedTime = 0;
+        this.flashTime = 0;
         this.resource = resource;
         if (func === undefined) {
             this.func = null;

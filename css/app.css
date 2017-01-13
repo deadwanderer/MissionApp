@@ -1,17 +1,35 @@
 .myProgress {
-    float: right;
-    margin-right: 250px;
     position: relative;
     width: 250px;
     height: 25px;
     background-color: grey;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
 }
 .myBar {
     position: absolute;
     height: 100%;
-    background-color: limegreen;
+    background-color: rgb(50, 205, 50);
+    border: 1px solid black;
+    border-radius: 5px;    
 }
-
+.barText {
+    position: relative;
+    margin: 0 auto;
+    padding-bottom: 5px;
+    z-index: 3;
+}
+.flashProgress {
+    z-index: 1;
+    border-color: white;
+    visibility: hidden;
+}
+.flashBar {
+    z-index: 2;
+    border-color: white;
+    visibility: visible;
+}
 #log {
-    min-height: 600px;
+    min-height: 400px;
 }

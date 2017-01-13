@@ -27,3 +27,11 @@ function zeroPad(num) {
     }
     return zeroString+n;
 }
+
+function lerpColor(c1, c2, endTime, currTime, opacity) {
+    result = c1 + ((c2 - c1) * (currTime / endTime));
+    if (opacity) {
+        return result;
+    }
+    return Math.floor(result);
+}
