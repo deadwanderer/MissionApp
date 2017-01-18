@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>App</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/app.css" />    
+</head>
+<body class="bg-inverse text-white">
+    <div class="container">
+        <ul class="nav nav-tabs bg-inverse" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#first" role="tab">Overview</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#second" role="tab">Missions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#third" role="tab">Champions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#fourth" role="tab">Inventory</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#fifth" role="tab">Settings</a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="first" role="tabpanel">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10" style="text-align: center;">
+                        <h4>Available Missions</h4>
+                        
+                    </div>                    
+                    <div class="col-sm-1"></div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="tab-pane fade in" id="second" role="tabpanel">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <h4>Available Missions</h4>
+                        <table class="table table-striped table-inverse table-sm table-hover">
+                            <thead>
+                                <tr>                                    
+                                    <th>Name</th>
+                                    <th>Length</th>
+                                    <th>Difficulty</th>
+                                    <th>Party Size</th>
+                                    <th>Cost</th>
+                                    <th>Rewards</th>
+                                </tr>
+                            </thead>
+                            <tbody id="availableMissionList">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <h4>Active Missions</h4>
+                        <table class="table table-striped table-inverse table-sm table-hover">
+                            <thead>
+                                <tr>                                    
+                                    <th>Name</th>
+                                    <th>Length</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activeMissionList">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="third" role="tabpanel">
+        </div>
+        <div class="tab-pane fade" id="fourth" role="tabpanel">        
+        </div>
+        <div class="tab-pane fade" id="fifth" role="tabpanel">        
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/tether.min.js"></script>    
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+</body>
+</html>
