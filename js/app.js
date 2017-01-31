@@ -51,6 +51,7 @@ var App = {
         spawnTime: 5000,
         elapsedSinceSpawn: 0,
     },
+    Modals: [],
 
     Init: function() {
         App.Time.currTime = Date.now();
@@ -271,17 +272,31 @@ var App = {
         log.insertBefore(para, log.childNodes[0]);
     },
 
-    ShowModal: function() {
-        vex.dialog.alert({ unsafeMessage: "<div class='myProgress' onclick='App.ShowSecondModal();'><div class='myBar' style='width:24%;'></div><span class='barText'>24%</span></div>"});
+    ShowModal: function(message) {
+        element = document.createElement('div');
+        element.id='modal';
+        element.className ="vex vex-theme-os";
+        element.innerHTML = '<div class="vex-overlay"></div><div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message"><div onclick="App.ShowSecondModal();">Test message</div></div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal();">OK</button></div></form></div>';
+        document.querySelector('body').appendChild(element);
+        $(document.body).addClass('vex-open');
+        console.log(document.body.lastChild);
+    },
+
+    HideModal: function() {        
+        $(document.body.lastChild).addClass('vex-closing');
+        window.setTimeout(function() {
+            document.body.removeChild(document.body.lastChild);
+        }, 500);
     },
 
     ShowSecondModal: function() {
-        vex.dialog.confirm({
-            message: "Just testing!",
-            callback: function() {
-                console.log("Second modal called back!");
-            }
-        });
+        element = document.createElement('div');
+        element.id='modal2';
+        element.className ="vex vex-theme-os";
+        element.innerHTML = '<div class="vex-overlay"></div><div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message"><div>Second message</div></div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button" type="button" onclick="App.HideModal();">OK</button></div></form></div>';
+        document.querySelector('body').appendChild(element);
+        $(document.body).addClass('vex-open');
+        console.log(document.body.lastChild);
     },
 };
 

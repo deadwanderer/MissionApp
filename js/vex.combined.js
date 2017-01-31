@@ -1543,7 +1543,7 @@ var vex = {
     }
     return vexes[ids[ids.length - 1]].close()
   },
-
+/*
   // Close every vex!
   closeAll: function closeAll () {
     for (var id in vexes) {
@@ -1551,7 +1551,7 @@ var vex = {
     }
     return true
   },
-
+*/
   // A getter for the internal lookup table
   getAll: function getAll () {
     return vexes
@@ -1562,7 +1562,7 @@ var vex = {
     return vexes[id]
   }
 }
-
+/*
 // Close top vex on escape
 window.addEventListener('keyup', function vexKeyupListener (e) {
   if (e.keyCode === 27) {
@@ -1571,8 +1571,9 @@ window.addEventListener('keyup', function vexKeyupListener (e) {
     isEscapeActive = false
   }
 })
+*/
 // Close all vexes on history pop state (useful in single page apps)
-window.addEventListener('popstate', vex.closeAll)
+//window.addEventListener('popstate', vex.closeAll)
 
 vex.defaultOptions = {
   content: '',
