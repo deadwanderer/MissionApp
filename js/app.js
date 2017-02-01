@@ -276,27 +276,32 @@ var App = {
         element = document.createElement('div');
         element.id='modal';
         element.className ="vex vex-theme-os";
-        element.innerHTML = '<div class="vex-overlay"></div><div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message"><div onclick="App.ShowSecondModal();">Test message</div></div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal();">OK</button></div></form></div>';
+        content = "<p>New Message that's really long to test wrapping and modal width. Is it limited? Is it locked? Who knows? Hopefully we soon will!</p><ul><li>Option 1</li><li>Option 2</li><li>Option Three</li></ul>";
+        element.innerHTML = '<div class="vex-overlay"></div><div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message" onclick="App.ShowSecondModal(\''+ content+ '\');">' + message + '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal(true);">OK</button></div></form></div>';
         document.querySelector('body').appendChild(element);
         $(document.body).addClass('vex-open');
-        console.log(document.body.lastChild);
     },
 
-    HideModal: function() {        
+    ConstructModal: function(caller, id) {
+
+    },
+
+    HideModal: function(noMoreModals) {        
         $(document.body.lastChild).addClass('vex-closing');
         window.setTimeout(function() {
             document.body.removeChild(document.body.lastChild);
         }, 500);
+        if(noMoreModals) {
+            $(document.body).removeClass('vex-open');
+        }
     },
 
-    ShowSecondModal: function() {
+    ShowSecondModal: function(message) {
         element = document.createElement('div');
         element.id='modal2';
         element.className ="vex vex-theme-os";
-        element.innerHTML = '<div class="vex-overlay"></div><div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message"><div>Second message</div></div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button" type="button" onclick="App.HideModal();">OK</button></div></form></div>';
+        element.innerHTML = '<div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message">'+ message + '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button" type="button" onclick="App.HideModal(false);">OK</button></div></form></div>';
         document.querySelector('body').appendChild(element);
-        $(document.body).addClass('vex-open');
-        console.log(document.body.lastChild);
     },
 };
 

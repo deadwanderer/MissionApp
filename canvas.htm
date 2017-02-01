@@ -17,6 +17,8 @@
 <script type="text/javascript">
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
+    var isWebGL = !!ctx;
+    console.log(isWebGL);
     var x = canvas.width / 2;
     var y = canvas.height - 30;
     var dx = 1;
