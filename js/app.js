@@ -51,7 +51,19 @@ var App = {
         spawnTime: 5000,
         elapsedSinceSpawn: 0,
     },
-    Modals: [],
+    Modals: 0,
+    ModalTypes: {
+        MISSION: 0,
+        HERO_SELECT: 1,
+        MESSAGE: 2,
+    },
+
+    Messages: [
+        "A Message", 
+        "<p>Test Message</p>", 
+        "<h2>Third Message</h2>", 
+        "<p>New Message that's really long to test wrapping and modal width. Is it limited? Is it locked? Who knows? Hopefully we soon will!</p><ul><li>Option 1</li><li>Option 2</li><li>Option Three</li></ul>",
+    ],
 
     Init: function() {
         App.Time.currTime = Date.now();
@@ -272,31 +284,53 @@ var App = {
         log.insertBefore(para, log.childNodes[0]);
     },
 
-    ShowModal: function(message) {
+    ShowModal: function(type, id) {
         element = document.createElement('div');
         element.id='modal';
         element.className ="vex vex-theme-os";
-        content = "<p>New Message that's really long to test wrapping and modal width. Is it limited? Is it locked? Who knows? Hopefully we soon will!</p><ul><li>Option 1</li><li>Option 2</li><li>Option Three</li></ul>";
-        element.innerHTML = '<div class="vex-overlay"></div><div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message" onclick="App.ShowSecondModal(\''+ content+ '\');">' + message + '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal(true);">OK</button></div></form></div>';
+        content = App.ConstructModal(type, id);
+        if (App.Modals++ == 0) {
+            element.innerHTML = '<div class="vex-overlay"></div>';
+        }
+        else {
+            element.innerHTML = '';
+        }
+        if (App.Modals > App.Messages.length) {
+            return;
+        }
+        element.innerHTML += '<div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message" onclick="App.ShowModal(2, ' + App.Modals + ');">' + content + '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal(true);">OK</button></div></form></div>';
         document.querySelector('body').appendChild(element);
         $(document.body).addClass('vex-open');
     },
 
     ConstructModal: function(caller, id) {
-
+        switch(caller) {
+            case App.ModalTypes.MISSION:
+                return "Mission Screen";
+                break;
+            case App.ModalTypes.HERO_SELECT:
+                return "Hero Selection Screen";
+                break;
+            case App.ModalTypes.MESSAGE:
+                return App.Messages[id];
+                break;
+            default:
+                return "ModalType " + caller + " not found.";                
+        }
     },
 
-    HideModal: function(noMoreModals) {        
+    HideModal: function() {        
         $(document.body.lastChild).addClass('vex-closing');
         window.setTimeout(function() {
             document.body.removeChild(document.body.lastChild);
         }, 500);
-        if(noMoreModals) {
+        if(App.Modals-- == 1) {
             $(document.body).removeClass('vex-open');
         }
     },
 
     ShowSecondModal: function(message) {
+        console.log("Second modal called");
         element = document.createElement('div');
         element.id='modal2';
         element.className ="vex vex-theme-os";
