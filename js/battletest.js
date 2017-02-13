@@ -3,6 +3,11 @@ var App = {
         Focused: true
     },
 
+    Canvas: {
+        width: 1200,
+        height: 800
+    },
+
     Ctx: null,
 
     Ticker: null,
@@ -601,16 +606,34 @@ var App = {
         }
     },
 
+    Camera: {
+        x: 0,
+        y: 0,
+        width: 1200,
+        height: 800,
+        maxX: App.Map.cols * App.Map.tsize - width,
+        maxY: App.Map.rows * App.Map.tsize - height,
+        speed: 256,
+        move: function(dirx, diry) {
+            this.x += dirx * this.speed * App.Time.deltaTime;
+            this.y += diry * this.speed * App.Time.deltaTime;
+            this.x = Math.max(0, Math.min(this.x, this.maxX));
+            this.y = Math.max(0, Math.min(this.y, this.maxY));
+        },
+    },
+
     Init: function() {
         App.Time.currTime = Date.now();
         App.Time.lastTime = Date.now();
         App.LoadImages();
+        Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         var c = document.getElementById("battle");
+        c.width = App.Canvas.width;
+        c.height = App.Canvas.height;
         App.Ctx = c.getContext('2d');
         if (App.Ticker === null) {
             App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
         }
-        App.DrawMap();
     },
 
     LoadImages: function() {
@@ -644,7 +667,14 @@ var App = {
 */
 
     Logic: function() {
+        var dirx = 0;
+        var diry = 0;
+        if (Keyboard.isDown(Keyboard.LEFT)) { dirx = -1; }
+        if (Keyboard.isDown(Keyboard.RIGHT)) { dirx = 1; }
+        if (Keyboard.isDown(Keyboard.UP)) { diry = -1; }
+        if (Keyboard.isDown(Keyboard.DOWN)) { diry = 1; }
 
+        App.Camera.move(dirx, diry);
 
         /*
         App.UpdateTimers();
@@ -658,6 +688,7 @@ var App = {
 
     Draw: function() {
         App.DrawTitle();
+        App.DrawMap();
 
         /*
         App.DrawCounters();
@@ -671,12 +702,23 @@ var App = {
     },
 
     DrawMap: function() {
-        for (var i = 0; i < App.Map.cols; i++) {
-            for (var j = 0; j < App.Map.rows; j++) {
+        var startCol = Math.floor(App.Camera.x / App.Map.tsize);
+        var endCol = startCol + (App.Camera.width / App.Map.tsize);
+        var startRow = Math.floor(App.Camera.y / App.Map.tsize);
+        var endRow = startRow + (App.Camera.height / App.Map.tsize);
+        var offsetX = -App.Camera.x + startCol * App.Map.tsize;
+        var offsetY = -App.Camera.y + startRow * App.Map.tsize;
+
+        for (var i = startCol; i < endCol; i++) {
+            for (var j = startRow; j < endRow; j++) {
+                x = (i - startCol) * App.Map.tsize + offsetX;
+                y = (j - startRow) * App.Map.tsize + offsetY;
+                /*
                 x = i * App.Map.tsize;
                 y = j * App.Map.tsize;
+                */
                 r = App.Map.getTile(i, j);
-                App.DrawTile(r, x, y, 1);
+                App.DrawTile(r, Math.round(x), Math.round(y), 1);
             }
         }
     },
@@ -903,6 +945,8 @@ var App = {
     },
     */
 };
+
+
 
 window.addEventListener('focus', function() {
     App.Params.Focused = true;
