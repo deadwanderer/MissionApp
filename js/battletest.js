@@ -4,8 +4,8 @@ var App = {
     },
 
     Canvas: {
-        width: 1200,
-        height: 800
+        width: 600,
+        height: 400
     },
 
     Ctx: null,
@@ -584,22 +584,34 @@ var App = {
     ],
 
     Map: {
-        cols: 12,
-        rows: 12,
+        cols: 24,
+        rows: 24,
         tsize: 64,
         tiles: [
-            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
-            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
-            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
-            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
-            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
-            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
-            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
-            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
-            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
-            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
-            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
-            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
+            0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,0, 1, 2, 3, 2, 3, 1, 0, 0, 2, 0, 1,
+            3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,3, 1, 2, 0, 6, 6, 6, 3, 1, 2, 0, 1,
+            0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
         ],
         getTile: function(col, row) {
             return this.tiles[row * this.cols + col];
@@ -609,16 +621,16 @@ var App = {
     Camera: {
         x: 0,
         y: 0,
-        width: 1200,
-        height: 800,
-        maxX: App.Map.cols * App.Map.tsize - width,
-        maxY: App.Map.rows * App.Map.tsize - height,
+        width: 600,
+        height: 400,
+        maxX: function() { return App.Map.cols * App.Map.tsize - App.Camera.width; },
+        maxY: function() { return App.Map.rows * App.Map.tsize - App.Camera.height; },
         speed: 256,
         move: function(dirx, diry) {
-            this.x += dirx * this.speed * App.Time.deltaTime;
-            this.y += diry * this.speed * App.Time.deltaTime;
-            this.x = Math.max(0, Math.min(this.x, this.maxX));
-            this.y = Math.max(0, Math.min(this.y, this.maxY));
+            this.x += dirx * this.speed * (App.Time.deltaTime / 1000);
+            this.y += diry * this.speed * (App.Time.deltaTime / 1000);
+            this.x = Math.max(0, Math.min(this.x, this.maxX()));
+            this.y = Math.max(0, Math.min(this.y, this.maxY()));
         },
     },
 
@@ -634,6 +646,7 @@ var App = {
         if (App.Ticker === null) {
             App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
         }
+        console.log(App.Camera.maxX() + ", " + App.Camera.maxY());
     },
 
     LoadImages: function() {
@@ -713,6 +726,7 @@ var App = {
             for (var j = startRow; j < endRow; j++) {
                 x = (i - startCol) * App.Map.tsize + offsetX;
                 y = (j - startRow) * App.Map.tsize + offsetY;
+                console.log(x + ", " + y);
                 /*
                 x = i * App.Map.tsize;
                 y = j * App.Map.tsize;
