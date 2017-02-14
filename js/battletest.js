@@ -4,8 +4,8 @@ var App = {
     },
 
     Canvas: {
-        width: 600,
-        height: 400
+        width: 1200,
+        height: 800
     },
 
     Ctx: null,
@@ -621,8 +621,8 @@ var App = {
     Camera: {
         x: 0,
         y: 0,
-        width: 600,
-        height: 400,
+        width: 1200,
+        height: 800,
         maxX: function() { return App.Map.cols * App.Map.tsize - App.Camera.width; },
         maxY: function() { return App.Map.rows * App.Map.tsize - App.Camera.height; },
         speed: 256,
