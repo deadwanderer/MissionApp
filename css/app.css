@@ -34,3 +34,8 @@
 #log {
     min-height: 400px;
 }
+#base64 {
+    font-family: "Courier New", serif;
+    color: #ddd;
+    font-size: 18px;
+}

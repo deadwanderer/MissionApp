@@ -33,11 +33,11 @@ var App = {
         elapsedSinceSpawn: 0,
     },
 
-    TileRes: 128,
-    TargetRes: 40,
+    TileRes: 64,
+    TargetRes: 64,
     TileCols: 27,
     TileRows: 20,
-    TileRef: "../img/tilesheet_complete_2X.png",
+    TileRef: "../img/tilesheet_complete.png",
     TileSheet: false,
 
     Tiles: [
@@ -637,16 +637,33 @@ var App = {
     Init: function() {
         App.Time.currTime = Date.now();
         App.Time.lastTime = Date.now();
+        /*
         App.LoadImages();
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         var c = document.getElementById("battle");
         c.width = App.Canvas.width;
         c.height = App.Canvas.height;
         App.Ctx = c.getContext('2d');
+        */
         if (App.Ticker === null) {
             App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
         }
         console.log(App.Camera.maxX() + ", " + App.Camera.maxY());
+        output = "";
+        for (i = 0; i < CODES.length; i++) {
+            outputEnc = base64Encode(CODES.charAt(i));
+            outputDec = base64Decode(outputEnc);
+            output += "<div class='row' style='text-align:center'><div class='col-sm-4'></div><div class='col-sm-2'>" + outputEnc + "</div><div class='col-sm-2'>" + outputDec + "</div><div class='col-sm-4'></div></div>";
+        }
+        for (i = 0; i < CODES.length -1; i++) {
+            for (j = i + 1; j < CODES.length; j++) {
+                text = CODES.charAt(i) + CODES.charAt(j);
+                outputEnc = base64Encode(text);
+                outputDec = base64Decode(outputEnc);
+                output += "<div class='row' style='text-align:center'><div class='col-sm-4'></div><div class='col-sm-2'>" + outputEnc + "</div><div class='col-sm-2'>" + outputDec + "</div><div class='col-sm-4'></div></div>";
+            }
+        }
+        document.getElementById("base64").innerHTML = output;
     },
 
     LoadImages: function() {
@@ -701,9 +718,12 @@ var App = {
 
     Draw: function() {
         App.DrawTitle();
-        App.DrawMap();
 
-        /*
+        
+           
+
+        /*    
+        App.DrawMap(); 
         App.DrawCounters();
         App.DrawResources();        
         App.DrawLog();
@@ -726,7 +746,6 @@ var App = {
             for (var j = startRow; j < endRow; j++) {
                 x = (i - startCol) * App.Map.tsize + offsetX;
                 y = (j - startRow) * App.Map.tsize + offsetY;
-                console.log(x + ", " + y);
                 /*
                 x = i * App.Map.tsize;
                 y = j * App.Map.tsize;

@@ -85,6 +85,8 @@ function base64Decode(input) {
     if (input.length % 4 != 0) {
         return "Error: invalid base64 input!";
     }
+    return atob(input);
+    /*
     output = "";
     b = ["", "", "", ""];
     for (var i = 0; i < input.length; i += 4) {
@@ -93,8 +95,9 @@ function base64Decode(input) {
         b[2] = CODES.indexOf(input.charAt(i+2));
         b[3] = CODES.indexOf(input.charAt(i+3));
     }
+    */
 }
 
 function base64Encode(input) {
-
+    return btoa(input);
 }
