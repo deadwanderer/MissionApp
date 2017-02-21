@@ -634,6 +634,48 @@ var App = {
         },
     },
 
+    Actors: [
+        { attackTime: 1500, id: 0, name: "Actor 0", timeTillNext: 1500 },
+        { attackTime: 2500, id: 1, name: "Actor 1", timeTillNext: 2500 },
+        { attackTime: 3000, id: 2, name: "Actor 2", timeTillNext: 3000 },
+        { attackTime: 2250, id: 3, name: "Actor 3", timeTillNext: 2250 },
+        { attackTime: 3500, id: 4, name: "Actor 4", timeTillNext: 3500 },
+        { attackTime: 1000, id: 5, name: "Actor 5", timeTillNext: 1000 },
+        { attackTime: 2000, id: 6, name: "Actor 6", timeTillNext: 2000 },
+        { attackTime: 1250, id: 7, name: "Actor 7", timeTillNext: 1250 },
+        { attackTime: 1750, id: 8, name: "Actor 8", timeTillNext: 1750 },
+        { attackTime: 1500, id: 9, name: "Actor 9", timeTillNext: 1500 },
+        { attackTime: 2500, id: 10, name: "Actor 10", timeTillNext: 2500 },
+    ],
+
+    WaitingOnActor: false,
+
+    ReadyActorIDs: [],
+
+    CurrActor: -1,
+
+    ElapsedTime: 0,
+
+    ClearCurrActor: function() {
+        console.log("ClearCurrActor clicked.");
+        App.ReadyActorIDs.splice(App.ReadyActorIDs.indexOf(App.CurrActor), 1);
+        if (App.ReadyActorIDs.length == 0) {
+            App.CurrActor = -1;
+            App.WaitingOnActor = false;
+        }
+        else {
+            App.CurrActor = App.ReadyActorIDs[0];
+            if (App.ReadyActorIDs.length > 1) {
+                for (i = 1; i < App.ReadyActorIDs.length; i++) {
+                    if (App.CurrActor > App.ReadyActorIDs[i]) {
+                        App.CurrActor = App.ReadyActorIDs[i];
+                    }
+                }
+            }
+        }
+        console.log("Ready actors: " + App.ReadyActorIDs.length);
+    },
+
     Init: function() {
         App.Time.currTime = Date.now();
         App.Time.lastTime = Date.now();
@@ -648,6 +690,7 @@ var App = {
         if (App.Ticker === null) {
             App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
         }
+        /*
         console.log(App.Camera.maxX() + ", " + App.Camera.maxY());
         output = "";
         for (i = 0; i < CODES.length; i++) {
@@ -664,6 +707,7 @@ var App = {
             }
         }
         document.getElementById("base64").innerHTML = output;
+        */
     },
 
     LoadImages: function() {
@@ -697,6 +741,7 @@ var App = {
 */
 
     Logic: function() {
+        /*
         var dirx = 0;
         var diry = 0;
         if (Keyboard.isDown(Keyboard.LEFT)) { dirx = -1; }
@@ -705,7 +750,60 @@ var App = {
         if (Keyboard.isDown(Keyboard.DOWN)) { diry = 1; }
 
         App.Camera.move(dirx, diry);
+        */
 
+        console.log(App.WaitingOnActor);
+        if(!App.WaitingOnActor) {
+            var minTime = Number.MAX_VALUE;
+            App.ReadyActorIDs = [];
+
+            for (var i = 0; i < App.Actors.length; i++) {
+                var attackTime = parseInt(App.Actors[i].attackTime);
+                console.log("Attack time: " + attackTime + ", elapsed time: " + App.ElapsedTime);
+
+                actionTime = App.Actors[i].attackTime - (App.ElapsedTime % App.Actors[i].attackTime);
+                if (actionTime == minTime) {
+                    App.ReadyActorIDs.push(i);
+                }
+                else if (actionTime < minTime) {
+                    App.ReadyActorIDs = [];
+                    minTime = actionTime;
+                    App.ReadyActorIDs.push(i);
+                }
+                console.log("Action time: " + actionTime);
+            }
+            console.log("Min time: " + minTime);
+
+            App.ElapsedTime += minTime;
+
+            for (i = 0; i < App.Actors.length; i++) {
+                App.Actors[i].timeTillNext -= minTime;
+                if (App.Actors[i].timeTillNext < 0) {
+                    console.log("ERROR: negative timeTillNext for " + App.Actors[i].name);
+                } 
+                else if (App.Actors[i].timeTillNext == 0 ) {
+                    if(!App.ReadyActorIDs.includes(i))
+                        console.log("ERROR: " + App.Actors[i].name + " not added to readyActorIDs");
+                    App.Actors[i].timeTillNext += App.Actors[i].attackTime;
+                }
+            }            
+        }
+
+        console.log(App.ReadyActorIDs.length + " actor" + (App.ReadyActorIDs.length == 1 ? " is" : "s are") + " ready to act.");
+            if (App.ReadyActorIDs.length < 1) {
+                App.WaitingOnActor = false;
+            }
+            else {
+                App.WaitingOnActor = true;
+                App.CurrActor = App.ReadyActorIDs[0];
+                if (App.ReadyActorIDs.length > 1) {
+                    for (i = 1; i < App.ReadyActorIDs.length; i++) {
+                        if (App.CurrActor > App.ReadyActorIDs[i]) {
+                            App.CurrActor = App.ReadyActorIDs[i];
+                        }
+                    }
+                }
+            }
         /*
         App.UpdateTimers();
         App.CullLog();
@@ -718,7 +816,7 @@ var App = {
 
     Draw: function() {
         App.DrawTitle();
-
+        App.DrawActors();
         
            
 
@@ -728,6 +826,23 @@ var App = {
         App.DrawResources();        
         App.DrawLog();
         */
+    },
+
+    DrawActors() {
+        document.getElementById("elapsedTime").innerHTML = App.ElapsedTime;
+        if (App.CurrActor >= 0) {
+            document.getElementById("currActor").innerHTML = App.Actors[App.CurrActor].name;
+            document.getElementById("actorButton").style.display = "block";
+        }
+        else {
+            document.getElementById("currActor").innerHTML = "";
+            document.getElementById("actorButton").style.display = "none";
+        }
+        var output = "<div class='row' style='text-align:center'><div class='col-sm-3'></div><div class='col-sm-3'>Actor Name</div><div class='col-sm-2'>AttackTime</div><div class='col-sm-2'>TimeTillNext</div><div class='col-sm-2'></div></div>";
+        for (i = 0; i < App.Actors.length; i++) {
+            output += "<div class='row' style='text-align:center'><div class='col-sm-3'></div><div class='col-sm-3'>" + App.Actors[i].name + "</div><div class='col-sm-2'>" + App.Actors[i].attackTime + "</div><div class='col-sm-2'>" + App.Actors[i].timeTillNext + "</div><div class='col-sm-2'></div></div>";
+        }
+        document.getElementById("action").innerHTML = output;
     },
 
     DrawTitle: function() {
