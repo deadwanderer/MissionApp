@@ -635,16 +635,16 @@ var App = {
     },
 
     Actors: [
-        { attackTime: 1500, id: 0, name: "Actor 0", timeTillNext: 1500 },
-        { attackTime: 2500, id: 1, name: "Actor 1", timeTillNext: 2500 },
-        { attackTime: 3000, id: 2, name: "Actor 2", timeTillNext: 3000 },
-        { attackTime: 2250, id: 3, name: "Actor 3", timeTillNext: 2250 },
-        { attackTime: 3500, id: 4, name: "Actor 4", timeTillNext: 3500 },
-        { attackTime: 1000, id: 5, name: "Actor 5", timeTillNext: 1000 },
-        { attackTime: 2000, id: 6, name: "Actor 6", timeTillNext: 2000 },
+        { attackTime: 1586, id: 0, name: "Actor 0", timeTillNext: 1586 },
+        { attackTime: 2537, id: 1, name: "Actor 1", timeTillNext: 2537 },
+        { attackTime: 3050, id: 2, name: "Actor 2", timeTillNext: 3050 },
+        { attackTime: 2260, id: 3, name: "Actor 3", timeTillNext: 2260 },
+        { attackTime: 3400, id: 4, name: "Actor 4", timeTillNext: 3400 },
+        { attackTime: 1001, id: 5, name: "Actor 5", timeTillNext: 1001 },
+        { attackTime: 2200, id: 6, name: "Actor 6", timeTillNext: 2200 },
         { attackTime: 1250, id: 7, name: "Actor 7", timeTillNext: 1250 },
         { attackTime: 1750, id: 8, name: "Actor 8", timeTillNext: 1750 },
-        { attackTime: 1500, id: 9, name: "Actor 9", timeTillNext: 1500 },
+        { attackTime: 1504, id: 9, name: "Actor 9", timeTillNext: 1504 },
         { attackTime: 2500, id: 10, name: "Actor 10", timeTillNext: 2500 },
     ],
 
@@ -840,7 +840,7 @@ var App = {
         }
         var output = "<div class='row' style='text-align:center'><div class='col-sm-3'></div><div class='col-sm-3'>Actor Name</div><div class='col-sm-2'>AttackTime</div><div class='col-sm-2'>TimeTillNext</div><div class='col-sm-2'></div></div>";
         for (i = 0; i < App.Actors.length; i++) {
-            output += "<div class='row' style='text-align:center'><div class='col-sm-3'></div><div class='col-sm-3'>" + App.Actors[i].name + "</div><div class='col-sm-2'>" + App.Actors[i].attackTime + "</div><div class='col-sm-2'>" + App.Actors[i].timeTillNext + "</div><div class='col-sm-2'></div></div>";
+            output += "<div class='row' style='text-align:center'><div class='col-sm-3'></div><div class='col-sm-3'>" + App.Actors[i].name + "</div><div class='col-sm-2'>" + App.Actors[i].attackTime + "</div><div class='col-sm-2'>" + (i == App.CurrActor ? "Acting" : App.Actors[i].timeTillNext) + "</div><div class='col-sm-2'></div></div>";
         }
         document.getElementById("action").innerHTML = output;
     },

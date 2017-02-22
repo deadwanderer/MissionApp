@@ -55,3 +55,21 @@ Different types of elemental damage:
 
 Equipment cannot be changed after start of battle, so gear stat contributions can be precalculated. However, buffs/spells/potions/effects can alter base stats (or should this not be allowed?), so is precalc useful at all?
 
+Stats:
+
+Brawn   (strength): Most melee damage       / parry
+Brains (intellect): Magic damage            / crit chance
+Finesse  (agility): Dagger/bow/gun damage   / dodge
+Faith     (spirit): Resource recovery       / haste
+Vitality (stamina): Health                  / resistance
+Vigor     (energy): Resource capacity       / crit damage
+
+Damage types:
+    Physical
+    Magic:
+        Holy
+        Fire
+        Cold
+        Nature
+        Arcane
+        Necrosis
