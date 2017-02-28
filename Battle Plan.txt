@@ -39,11 +39,13 @@ Should one-time instant attacks be another type of Effect? Have a type of effect
 
 Effects can be Buffs, Debuffs, HealOverTime, or DamageOverTime,
 
-Buffs and Debuffs can be timed (for the next 20 seconds), or value-based (for the next three attacks, for the next 200 damage taken, until the next critical attack, etc.)
+Buffs and Debuffs can be timed (for the next 20 seconds), or value-based (for the next three turns, for the next 200 damage taken, until the next critical attack, etc.)
 
 These can include things like haste/slow, damage dealt/taken increased/decreased, vulnerability/resistance to damage/healing/Effects, stuns, slows, crit, etc.
 
 HealOverTime and DamageOverTime have a max duration (possibly affected by gear/stats/skills), a tickTime (shortened by haste/gear/skills), a damage/healing min and max (actual value chosen at random between min and max each tick), an optional weight (to influence the damage/healing bell curve towards max or min, will default to no-influence value).
+
+Units may also have passive abilities, called Auras. These are untimed effects that apply for the duration of battle. They are applied at the very start of battle, before the BattleClock starts ticking. They can be the same as Effects, but are not ticked through for time advancement calculations, though they must be checked as part of the "time till attack" calculations if they apply some ticking HOT/DOT or apply on certain events (crits, stuns, heals, etc). Can this be handled behind the scenes by just having them be Effects, with the time being zero or negative?
 
 Different types of elemental damage: 
     Holy: heals for a percentage of damage dealt.
@@ -63,6 +65,8 @@ Finesse  (agility): Dagger/bow/gun damage   / dodge
 Faith     (spirit): Resource recovery       / haste
 Vitality (stamina): Health                  / resistance
 Vigor     (energy): Resource capacity       / crit damage
+Alacrity   (haste): 
+Intensity   (crit): 
 
 Damage types:
     Physical
@@ -73,3 +77,49 @@ Damage types:
         Nature
         Arcane
         Necrosis
+
+Gear upgrades: requires shards to ascend through three tiers for each ranking
+    Worn (grey) (normal drop from enemies)
+    Functional (white) (base crafted level)
+    Proven (green)
+    Storied (blue) (highest level drop from non-boss enemies)
+    Ancient (purple) (highest level drop from bosses (endgame bosses))
+    Artifact (red)  (shards drop from normal endgame)
+    Ascendant (orange) (Highest tier) (shards drop from heroic endgame)
+
+
+Battle flow:
+BEFORE CLOCK STARTS:
+
+Load all combatants.
+Apply all Auras. 
+Put all combatants and all time-based Aura Effects into the timing queue.
+
+START CLOCK
+While (clock running)
+    If (Battle end (all enemies OR all heroes are dead))
+        Stop clock
+        Victory or defeat
+    Else 
+        If (readyToAct list has something in it):
+            Remove the first actor from the list and perform their action
+        else
+            Advance clock to next action time, add actor(s) to readyToAct list
+
+Actor is a generic component that tracks time to act (tickTime for Effects, attack speed for characters), and has an Apply method. 
+The Effect version handles healing/damaging the target it's applied to, and the Character version handles calling the AI (for enemies) or presenting the Abilities screen (for heroes). AI and Character attacks happen as part of this call as well, but handled by the characters.
+
+Should the attacker calculate damage when doing an attack, then submit AttemptAttack to the target with a struct holding all damage types with attack values for each (like so:
+    struct Damage {
+        physical: 1337,
+        holy: 700,
+        fire: 0,
+        cold: 0,
+        nature: 250,
+        arcane: 0,
+        necrosis: 0,
+        effects: [Slow]
+        chanceToHit: 90%
+    }), and the target handles whether it hits or not (rolls against attacker chanceToHit, as well as rolling against target dodge/parry chance), and handles any damage mitigation (30% physical reduction, 5% magic vulnerability, etc.) and effects applied, and sends back to the game the actual damage done?
+
+    Or would it just be better for the game to handle the whole thing with a ResolveAttack(attacker, target) call that handles it all? Is there really any difference?
