@@ -78,7 +78,8 @@ Damage types:
         Arcane
         Necrosis
 
-Gear upgrades: requires shards to ascend through three tiers for each ranking
+Gear upgrades: requires shards to improve through three tiers for each ranking.
+Require special mat to ascend to next tier?
     Worn (grey) (normal drop from enemies)
     Functional (white) (base crafted level)
     Proven (green)
