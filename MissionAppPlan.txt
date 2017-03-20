@@ -1,0 +1,102 @@
+BASIC FLOW:
+
+1. List of available missions (3 - 6?) Basic mission info is shown for each one.
+    - How often are these generated/regenerated?
+        - When available # falls below a min (3)?
+        - On a timer?
+        - Random number (0 - all) regenerated after each selection?
+    - Have lower tier missions be completely randomly generated, with special or story missions appearing at timed or random intervals?
+    - Chance to generate higher-tier missions, with increased difficulty, but also greater rewards (more of the mission reward item, chance for additional mats or a special item)
+    - Missions have a chance to generate an extra threat, that doesn't affect base mission stats, but if countered it grants additional rewards. If the same threat type already exists, the mission will require an extra counter of that type to cover the additional threat. In other words, each counter only covers one instance of the threat, with the base mission threat being covered first.
+    
+    Mission generation steps:
+        1. Select mission type (money, resources, gear, new crew, intel, etc.)
+        2. Select subtype, if relevant (resource type, gear type [weapon, armor])
+        3. Roll for mission rarity (normal, 75%+ chance, above average, maybe 1 in 6, rare, 1 in 20-25, epic, 1 in 100+)
+        4. Generate mission requirements (length, party size, cost, rewards)
+
+2. Click on a desired mission
+
+3. Detailed mission info is shown in a popup, giving a brief description of the mission, listing enemies and their abilities, showing mission rewards, and showing empty slots for each of the needed crew members (one slot for each needed).
+
+4. Clicking on an empty slot brings up a list of all crew members in another popup.
+    - Only show available, or show all, with available sorted to the top?
+    - Show most eligible party members at the top? Favor higher-leveled over lower-leveled, favor more counters over fewer, favor higher-ranked over lower-ranked (epic over rare over uncommon, etc), higher-geared over lower-geared.
+    - Show crew name, level, gear level, relevant abilities, rank
+
+5. Clicking on a crew member selects them for that slot
+    - Update UI to show altered mission time, success chance, threats countered, rewards, etc.
+    - As long as at least one slot is filled, allow the "Start Mission" button to be clicked.
+
+6. When "Start Mission" button is clicked, start the mission!
+    - Remove started mission from available missions list, add started mission to current missions list. Flag mission's crew members as on mission. 
+
+Crew members have a specialization that grants them extra success chance on certain mission types (perhaps just a chance of specialization, rather than locking each to a spec?). Ranking up grants (guaranteed?) additional specializations, or strengthening of existing spec. Perhaps 60% chance to increase existing, 40% chance to add additional spec.
+
+Crew members also have one to several abilities (tied to spec at all? Additional granted by spec?). These can counter enemy threats on missions. Each ability can counter one threat.
+
+Needed constructs:
+
+Mission:
+    Type
+    Base duration
+    Enemy List
+    Level/gear requirement
+    Rewards list
+    Crew list
+
+Crewmember:
+    Level
+    Gear level
+    Rank
+    Abilities
+    Specialization
+
+Ability:
+    Name
+    Type
+    Description
+
+Specialization:
+    Name
+    Description
+
+Enemy:
+    Name
+    Abilities
+    Rank
+    Gear level
+
+MissionType
+    Kill, favors Bloodlust
+    Collect, favors Keen Eye
+    Defend, favors Unflinching
+    Scout, favors Stealthy
+    Ward, favors Thaumaturge
+
+AbilityType
+    Reduced success chance (physical):
+        Crushing, countered by Unbreaking Bulwark
+	    Horde, countered by Storm Of Fire
+	    Armored, countered by Melt Steel
+	
+    Reduced success chance (magic):
+    	Fireblast, countered by Quenching Rain
+	    Arcane Storm, countered by Arcane Annulment
+	    Rune of Aegis, countered by Dispel Magic
+
+    Reduced success chance (mental):
+    	Intimidate, countered by Hymn Of Courage
+	    Reaving Shout, countered by Heroic Stance
+	    Aura of Bones, countered by Death Hath No Fury
+	
+    Increased mission time:
+    	Web, countered by Scorch
+	    Torpor, countered by Invigorate
+	    Quagmire, countered by Levitate
+	
+    Increased mission cost:
+        Rough Terrain, countered by Cushioned Saddle
+	    Toll Roads, countered by Inside Source
+	    In The Sticks, countered by Teleport
+    

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>App</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/vex.css" />
+    <link rel="stylesheet" href="css/vex-theme-os.css" />
+    <link rel="stylesheet" href="css/app.css" />    
+</head>
+<body class="bg-inverse text-white">
+    <div class="container">
+        <ul class="nav nav-tabs bg-inverse" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#first" role="tab">Overview</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#second" role="tab">Missions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#third" role="tab">Champions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#fourth" role="tab">Inventory</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#fifth" role="tab">Settings</a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content">
+        <div class="tab-pane fade in" id="first" role="tabpanel">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>Resources</h4>
+                        <table class="table table-inverse table-striped table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="resourceList">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h4>Inventory</h4>
+                        <table class="table">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Slot</th>
+                                    <th>Name</th>
+                                    <th>Item Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Head</td>
+                                    <td>Item of Greatness</td>
+                                    <td>830</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-6">
+                        <h4>Activity Log</h4>
+                        <div id="log">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade in active" id="second" role="tabpanel">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <h4>Available Missions</h4>
+                        <table class="table table-striped table-inverse table-sm table-hover">
+                            <thead>
+                                <tr>                                    
+                                    <th>Name</th>
+                                    <th>Length</th>
+                                    <th>Difficulty</th>
+                                    <th>Party Size</th>
+                                    <th>Cost</th>
+                                    <th>Rewards</th>
+                                </tr>
+                            </thead>
+                            <tbody id="availableMissionList">
+                                <tr onclick="App.ShowModal(2, 0);">
+                                    <td>A Mission</td>
+                                    <td>4 Hours</td>
+                                    <td>7</td>
+                                    <td>3</td>
+                                    <td>25 Gold</td>
+                                    <td>100 Leather</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-1"></div>
+                    <div class="col-sm-10">
+                        <h4>Active Missions</h4>
+                        <table class="table table-striped table-inverse table-sm table-hover">
+                            <thead>
+                                <tr>                                    
+                                    <th style="width:20%;">Name</th>
+                                    <th style="width:20%;">Length</th>
+                                    <th style="width:60%;">Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody id="activeMissionList">
+                                <tr id="am0" style="display: none">                                    
+                                    <td id="am0Name">Name</th>
+                                    <td id="am0Length">Length</th>
+                                    <td id="am0Progress">Progress</th>
+                                </tr>
+                                <tr id="am1" style="display: none">                                    
+                                    <td id="am1Name">Name</th>
+                                    <td id="am1Length">Length</th>
+                                    <td id="am1Progress">Progress</th>
+                                </tr>
+                                <tr id="am2" style="display: none">                                    
+                                    <td id="am2Name">Name</th>
+                                    <td id="am2Length">Length</th>
+                                    <td id="am2Progress">Progress</th>
+                                </tr>
+                                <tr id="am3" style="display: none">                                    
+                                    <td id="am3Name">Name</th>
+                                    <td id="am3Length">Length</th>
+                                    <td id="am3Progress">Progress</th>
+                                </tr>
+                                <tr id="am4" style="display: none">                                    
+                                    <td id="am4Name">Name</th>
+                                    <td id="am4Length">Length</th>
+                                    <td id="am4Progress">Progress</th>
+                                </tr>
+                                <tr id="am5" style="display: none">                                    
+                                    <td id="am5Name">Name</th>
+                                    <td id="am5Length">Length</th>
+                                    <td id="am5Progress">Progress</th>
+                                </tr>
+                                <tr id="am6" style="display: none">                                    
+                                    <td id="am6Name">Name</th>
+                                    <td id="am6Length">Length</th>
+                                    <td id="am6Progress">Progress</th>
+                                </tr>
+                                <tr id="am7" style="display: none">                                    
+                                    <td id="am7Name">Name</th>
+                                    <td id="am7Length">Length</th>
+                                    <td id="am7Progress">Progress</th>
+                                </tr>
+                                <tr id="am8" style="display: none">                                    
+                                    <td id="am8Name">Name</th>
+                                    <td id="am8Length">Length</th>
+                                    <td id="am8Progress">Progress</th>
+                                </tr>
+                                <tr id="am9" style="display: none">                                    
+                                    <td id="am9Name">Name</th>
+                                    <td id="am9Length">Length</th>
+                                    <td id="am9Progress">Progress</th>
+                                </tr>
+                                <tr id="am10" style="display: none">                                    
+                                    <td id="am10Name">Name</th>
+                                    <td id="am10Length">Length</th>
+                                    <td id="am10Progress">Progress</th>
+                                </tr>
+                                <tr id="am11" style="display: none">                                    
+                                    <td id="am11Name">Name</th>
+                                    <td id="am11Length">Length</th>
+                                    <td id="am11Progress">Progress</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-1"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="third" role="tabpanel">
+            <div class="container">
+                <div class="row" style="text-align: center;">
+                    <div class="col-sm-5">Heroes</div>
+                    <div class="col-sm-2">--</div>
+                    <div class="col-sm-5">Enemies</div>
+                </div> 
+                <div class="row">
+                    <div class="col-sm-5"></div>
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-5"></div>
+                </div>                
+            </div>
+        </div>
+        <div class="tab-pane fade" id="fourth" role="tabpanel">        
+        </div>
+        <div class="tab-pane fade" id="fifth" role="tabpanel">        
+        </div>
+    </div>
+    
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/tether.min.js"></script>    
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>
