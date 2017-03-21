@@ -35,6 +35,8 @@ Crew members have a specialization that grants them extra success chance on cert
 
 Crew members also have one to several abilities (tied to spec at all? Additional granted by spec?). These can counter enemy threats on missions. Each ability can counter one threat.
 
+Crew members also can have (and learn?) traits, which grant bonuses when faced with certain types of threats (for example, +20% chance of success when facing slowing abilities, increased rewards when successfully countering mental threats, etc.)
+
 Needed constructs:
 
 Mission:
@@ -77,26 +79,26 @@ MissionType
 AbilityType
     Reduced success chance (physical):
         Crushing, countered by Unbreaking Bulwark
-	    Horde, countered by Storm Of Fire
-	    Armored, countered by Melt Steel
-	
+        Horde, countered by Storm Of Fire
+        Armored, countered by Melt Steel
+    
     Reduced success chance (magic):
-    	Fireblast, countered by Quenching Rain
-	    Arcane Storm, countered by Arcane Annulment
-	    Rune of Aegis, countered by Dispel Magic
+        Fireblast, countered by Quenching Rain
+        Arcane Storm, countered by Arcane Annulment
+        Rune of Aegis, countered by Dispel Magic
 
     Reduced success chance (mental):
-    	Intimidate, countered by Hymn Of Courage
-	    Reaving Shout, countered by Heroic Stance
-	    Aura of Bones, countered by Death Hath No Fury
-	
+        Intimidate, countered by Hymn Of Courage
+        Reaving Shout, countered by Heroic Stance
+        Aura of Bones, countered by Death Hath No Fury
+    
     Increased mission time:
-    	Web, countered by Scorch
-	    Torpor, countered by Invigorate
-	    Quagmire, countered by Levitate
-	
+        Web, countered by Scorch
+        Torpor, countered by Invigorate
+        Quagmire, countered by Levitate
+    
     Increased mission cost:
         Rough Terrain, countered by Cushioned Saddle
-	    Toll Roads, countered by Inside Source
-	    In The Sticks, countered by Teleport
+        Toll Roads, countered by Inside Source
+        In The Sticks, countered by Teleport
     

@@ -3,6 +3,8 @@ var App = {
         Focused: true
     },
 
+    fullDraw: true,
+
     Counters: [],
     FlashTime: 250,
     FlashHeight: 50,
@@ -11,7 +13,7 @@ var App = {
     Resources: {
         resourceMax: 500,
         resourceMin: 10,
-        resourceMult: 25,
+        resourceMult: 1,
     },
 
     ResourceList: {
@@ -125,6 +127,7 @@ var App = {
     },
 
     DrawCounters: function() {
+	    if (App.fullDraw) {
         text = "";
         for (i = 0; i < App.Counters.length; i++) {            
             counter = App.Counters[i];
@@ -154,6 +157,12 @@ var App = {
             }
         }
         document.getElementById("activeMissionList").innerHTML = text;
+        }
+        else {
+            for (i = 0; i < App.Counters.length; i++) {
+                counter = App.Counters[i];
+            }
+        }	
     },
 
     DrawResources: function() {
