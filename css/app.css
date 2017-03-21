@@ -6,6 +6,7 @@
     border: 3px solid black;
     border-radius: 7px;
     text-align: center;
+    z-index: 1;
 }
 .myBar {
     position: absolute;
@@ -13,6 +14,7 @@
     background-color: rgb(50, 205, 50);
     border-right: 2px solid black;
     border-radius: 5px;
+    z-index: 2;
 }
 .barText {
     position: absolute;
@@ -22,14 +24,12 @@
     z-index: 3;
 }
 .flashProgress {
-    z-index: 1;
     border-color: white;
-    visibility: hidden;
+    visibility:hidden;
 }
 .flashBar {
-    z-index: 2;
     border-color: white;
-    visibility: visible;
+    visibility:visible;
 }
 #log {
     min-height: 400px;

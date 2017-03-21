@@ -14,13 +14,15 @@ function timeFormat(timeInMillis) {
     timeRemaining -= (m * minutes);
     var s = Math.floor(timeRemaining / seconds);
     timeRemaining -= (s * seconds);
-    time = (d > 0 ? d + " days, " : "") + (h > 0 ? h + " hours, " : "") + (m > 0 ? m + " minutes, " : "") + s + "." + zeroPad(timeRemaining) + " seconds";
+    time = (d > 0 ? d + " days, " : "") + (h > 0 ? h + " hours, " : "") + (m > 0 ? m + " minutes, " : "") + s
+	/*+ "." + zeroPad(timeRemaining)*/
+	+ " seconds";
     return time;
 }
 
 function zeroPad(num) {
     var n = Math.abs(num);
-    var zeros = Math.max(0, 3 - Math.floor(n).toString().length );
+    var zeros = Math.min(0, 3 - Math.floor(n).toString().length );
     var zeroString = Math.pow(10,zeros).toString().substr(1);
     if( num < 0 ) {
         zeroString = '-' + zeroString;
@@ -100,4 +102,19 @@ function base64Decode(input) {
 
 function base64Encode(input) {
     return btoa(input);
+}
+
+function addClass(el, className) {
+    if (el.classList)
+	el.classList.add(className);
+    else if (!hasClass(el, className)) el.className += " " + className;
+}
+
+function removeClass(el, className) {
+    if (el.classList)
+	el.classList.remove(className);
+    else if (hasClass(el, className)) {
+	var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+	el.className = el.className.replace(reg, ' ');
+    }
 }

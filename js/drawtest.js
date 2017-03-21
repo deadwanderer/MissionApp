@@ -3,11 +3,11 @@ var App = {
         Focused: true
     },
 
-    fullDraw: true,
+    fullDraw: false,
 
     Counters: [],
     FlashTime: 250,
-    FlashHeight: 50,
+    FlashHeight: 100,
     CounterNum: 0,
 
     Resources: {
@@ -159,10 +159,55 @@ var App = {
         document.getElementById("activeMissionList").innerHTML = text;
         }
         else {
+	    App.ClearCounterDivs();
             for (i = 0; i < App.Counters.length; i++) {
                 counter = App.Counters[i];
+		document.getElementById("am"+i).style.visibility = 'visible';
+		document.getElementById("am" + i + "Name").innerHTML = counter.cName;
+		document.getElementById("am" + i + "Length").innerHTML = timeFormat(counter.runTime);
+		if (counter.elapsedTime <= counter.runTime) {
+                    width = (counter.elapsedTime / counter.runTime) * 100;
+                    textWidth = Math.round(width);
+		    progDiv = document.getElementById("am"+i+"ProgDiv");
+		    progDiv.style.height="25px";
+		    progDiv.style.width="250px";
+		    progDiv.style.margin = '0';
+		    barDiv = document.getElementById("am" + i + "BarDiv");
+		    barDiv.style.width = width + "%";
+		    barDiv.style.backgroundColor = 'rgb(50, 205, 50)';
+		    barDiv.style.opacity = '1';
+		    document.getElementById("am" + i + "BarSpan").innerHTML = textWidth + "%";		    
+		}
+		else if (counter.flashTime <= App.FlashTime) {
+                    heightAdd = Math.round((counter.flashTime / App.FlashTime) * App.FlashHeight);
+                    width = 250 + heightAdd;
+                    height = 25 + heightAdd;
+                    margin = heightAdd / 2;
+		    progElem = document.getElementById("am" + i + "ProgDiv");
+		    barElem = document.getElementById("am" + i + "BarDiv");
+		    addClass(progElem, "flashProgress");
+		    addClass(barElem, "flashBar");
+		    progElem.style.height = height+"px";
+		    progElem.style.width = width+"px";
+		    progElem.style.margin = "-" + margin + "px -" + margin + "px";
+		    barElem.style.width = "100%";
+		    red = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false);
+		    green = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false);
+		    blue = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false);
+		    opac = lerpColor(1, 0, App.FlashTime * App.FlashTime, counter.flashTime * counter.flashTime, true);
+		    barElem.style.backgroundColor = "rgb("+red+","+green+","+blue+")";
+		    barElem.style.opacity = opac;
+		}
             }
         }	
+    },
+
+    ClearCounterDivs: function() {
+	for (i = 0; i < 12; i++) {
+	    removeClass(document.getElementById("am" + i + "ProgDiv"), "flashProgress");
+	    removeClass(document.getElementById("am" + i + "BarDiv"), "flashBar");
+	    document.getElementById("am"+i).style.visibility = 'hidden';
+	}
     },
 
     DrawResources: function() {
