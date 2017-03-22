@@ -118,3 +118,11 @@ function removeClass(el, className) {
 	el.className = el.className.replace(reg, ' ');
     }
 }
+
+function getRowId(node) {
+    console.log(node.nodeName);
+    while (node.nodeName !== 'TR') {
+        node = node.parentElement;
+    }
+    return node.id.split("am")[1];
+}

@@ -162,7 +162,9 @@ var App = {
             App.ClearCounterDivs();
             for (i = 0; i < App.Counters.length; i++) {
                 counter = App.Counters[i];
-                document.getElementById("am"+i).style.visibility = 'visible';
+                id = "am" + i;
+                row = document.getElementById(id);
+                row.style.visibility = 'visible';
                 document.getElementById("am" + i + "Name").innerHTML = counter.cName;
                 document.getElementById("am" + i + "Length").innerHTML = timeFormat(counter.runTime);
                 if (counter.elapsedTime <= counter.runTime) {
@@ -206,7 +208,8 @@ var App = {
 	    for (i = 0; i < 12; i++) {
 	        removeClass(document.getElementById("am" + i + "ProgDiv"), "flashProgress");
 	        removeClass(document.getElementById("am" + i + "BarDiv"), "flashBar");
-	        document.getElementById("am"+i).style.visibility = 'hidden';
+            row = document.getElementById("am"+i);
+	        row.style.visibility = 'hidden';
 	    }
     },
 
@@ -360,7 +363,7 @@ var App = {
     ConstructModal: function(caller, id) {
         switch(caller) {
             case App.ModalTypes.MISSION:
-                return "Mission Screen";
+                return "Mission Screen for mission " + id;
                 break;
             case App.ModalTypes.HERO_SELECT:
                 return "Hero Selection Screen";
@@ -381,15 +384,6 @@ var App = {
         if(App.Modals-- == 1) {
             $(document.body).removeClass('vex-open');
         }
-    },
-
-    ShowSecondModal: function(message) {
-        console.log("Second modal called");
-        element = document.createElement('div');
-        element.id='modal2';
-        element.className ="vex vex-theme-os";
-        element.innerHTML = '<div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message">'+ message + '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button" type="button" onclick="App.HideModal(false);">OK</button></div></form></div>';
-        document.querySelector('body').appendChild(element);
     },
 };
 
