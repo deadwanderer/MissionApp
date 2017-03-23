@@ -6,8 +6,8 @@ var App = {
     fullDraw: false,
 
     Counters: [],
-    FlashTime: 250,
-    FlashHeight: 100,
+    FlashTime: 300,
+    FlashHeight: 75,
     CounterNum: 0,
 
     Resources: {
@@ -44,20 +44,27 @@ var App = {
         minutes: 60 * this.seconds,
         hours: 60 * this.minutes,
         days: 24 * this.hours,
-        timeMax: 25,
-        timeMin: 3,
+        timeMax: 15,
+        timeMin: 5,
         RandomTime: function() {
             return Math.floor(Math.random() * (this.timeMax  - this.timeMin + 1) + this.timeMin) * this.seconds;
         },
 
-        spawnTime: 5000,
+        spawnTime: 2000,
         elapsedSinceSpawn: 0,
     },
     Modals: 0,
-    ModalTypes: {
-        MISSION: 0,
-        HERO_SELECT: 1,
-        MESSAGE: 2,
+    ModalBuild: {
+        startText: '<div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message" ',
+        secondModalStart: 'onclick="App.ShowModal(',
+        secondModalEnd: ');"',
+        startCloseText: '>', 
+        endText: '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal();">OK</button></div></form></div>',
+        ModalTypes: {
+            MISSION: 0,
+            HERO_SELECT: 1,
+            MESSAGE: 2,
+        }
     },
 
     Messages: [
@@ -344,36 +351,38 @@ var App = {
     ShowModal: function(type, id) {
         element = document.createElement('div');
         element.id='modal';
-        element.className ="vex vex-theme-os";
-        content = App.ConstructModal(type, id);
+        element.className ="vex vex-theme-os";        
+        html = ""
         if (App.Modals++ == 0) {
-            element.innerHTML = '<div class="vex-overlay"></div>';
-        }
-        else {
-            element.innerHTML = '';
+            html += '<div class="vex-overlay"></div>';
         }
         if (App.Modals > App.Messages.length) {
             return;
         }
-        element.innerHTML += '<div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message" onclick="App.ShowModal(2, ' + App.Modals + ');">' + content + '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal(true);">OK</button></div></form></div>';
+        content = App.ConstructModal(type, id);
+        html += content;
+        element.innerHTML = html;
         document.querySelector('body').appendChild(element);
         $(document.body).addClass('vex-open');
     },
 
     ConstructModal: function(caller, id) {
+        content = App.ModalBuild.startText;
         switch(caller) {
-            case App.ModalTypes.MISSION:
-                return "Mission Screen for mission " + id;
+            case App.ModalBuild.ModalTypes.MISSION:
+                content += App.ModalBuild.startCloseText + "Mission Screen for mission " + id;
                 break;
-            case App.ModalTypes.HERO_SELECT:
-                return "Hero Selection Screen";
+            case App.ModalBuild.ModalTypes.HERO_SELECT:
+                content += App.ModalBuild.startCloseText + "Hero Selection Screen";
                 break;
-            case App.ModalTypes.MESSAGE:
-                return App.Messages[id];
+            case App.ModalBuild.ModalTypes.MESSAGE:
+                content += App.ModalBuild.secondModalStart + 2 + ', ' + App.Modals + App.ModalBuild.secondModalEnd + App.ModalBuild.startCloseText + App.Messages[id];
                 break;
             default:
                 return "ModalType " + caller + " not found.";                
         }
+        content += App.ModalBuild.endText;
+        return content;
     },
 
     HideModal: function() {        
@@ -385,6 +394,88 @@ var App = {
             $(document.body).removeClass('vex-open');
         }
     },
+
+    Mission: function() {
+        this.defaultDuration = 5000;
+        this.setType = function(missionType) {
+            this.missionType = missionType;
+        }
+        this.getType = function() {
+            if (this.missionType) {
+                return this.missionType;
+            }
+            return null;
+        }
+        this.setDuration = function(duration) {
+            this.duration = duration;
+        }
+        this.getDuration = function() {
+            if (this.duration) {
+                return this.duration;
+            }
+            else {
+                return this.defaultDuration;
+            } 
+        }
+        this.enemyList = []
+        this.setEnemies = function(enemies) {
+            if (Array.isArray(enemies)) {
+                this.enemyList = enemies;
+            }
+            else {
+                console.error("Error in App.Mission.setEnemies(enemies): enemies need to be an array");
+            }
+        }
+        this.addEnemy = function(enemy) {
+            enemyList.push(enemy);
+        }
+        this.getEnemies = function() {
+            return this.enemyList;
+        }
+        this.setRequirements = function(reqs) {
+            this.requirements = reqs;
+        }
+        this.getRequirements = function() {
+            return this.requirements;
+        }
+    },
+
+    Crewmember: function() {
+
+    },
+
+    Ability: function() {
+
+    },
+
+    Specialization: function() {
+
+    },
+
+    Enemy: function() {
+
+    },
+
+    MissionType: function() {
+
+    },
+
+    AbilityType: function() {
+
+    },
+
+    Requirements: function() {
+        this.level = 0;
+        this.gearLevel = 0;
+        this.rankLevel = 0;
+    },
+
+    Rank: {
+        Apprentice: 1,
+        Skilled: 2,
+        Master: 3, 
+        Champion: 4
+    }
 };
 
 window.addEventListener('focus', function() {

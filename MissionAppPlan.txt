@@ -99,6 +99,6 @@ AbilityType
     
     Increased mission cost:
         Rough Terrain, countered by Cushioned Saddle
-        Toll Roads, countered by Inside Source
+        Toll Roads, countered by Friends In High Places
         In The Sticks, countered by Teleport
     
