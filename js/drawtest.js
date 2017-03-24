@@ -2,6 +2,34 @@ var App = {
     Params: {
         Focused: true
     },
+    FPSStore: [],
+    FPSStoreMax: 120,
+    FPSLength: 0,
+    FPSNextAdd: 0,
+    CalcFPS: function() {
+        sum = 0;
+        for (i = 0; i < App.FPSLength; i++) {
+            sum += App.FPSStore[i];
+        }
+        return Math.floor(1000 / (sum / App.FPSLength));
+    },
+
+    AddFPS: function(addition) {
+        // if the array doesn't yet store the max number of entries...
+        if (App.FPSLength < App.FPSStoreMax) {
+            //...Add this entry to the array, and bump the number of entries stored.
+            App.FPSStore.push(addition);
+            App.FPSNextAdd++;
+            App.FPSLength++;
+        }
+        // If the array is storing the max number we want to store...
+        else {
+            // FPSNextAdd always points to the oldest stored entry.
+            if (App.FPSLength != App.FPSStoreMax) console.error("You messed up the FPS array, dummy!");
+            if (App.FPSNextAdd == App.FPSStoreMax) App.FPSNextAdd = 0;
+            App.FPSStore[App.FPSNextAdd++] = addition;
+        }
+    },
 
     fullDraw: false,
 
@@ -31,15 +59,14 @@ var App = {
 
     ResourceType: ["Stone", "Food", "Leather", "Gold"],
 
-    Ticker: null,
-
     Time: {
         currTime: 0,
         lastTime: 0,
         deltaTime: 0,
         elapsedTotal: 0,
-        focusFPS: 60,
-        blurFPS: 10,
+        fps: function() {
+            return App.CalcFPS();
+        },
         seconds: 1000,
         minutes: 60 * this.seconds,
         hours: 60 * this.minutes,
@@ -75,8 +102,6 @@ var App = {
     ],
 
     Init: function() {
-        App.Time.currTime = Date.now();
-        App.Time.lastTime = Date.now();
         $("#log").on("wheel", function() {
             App.RefreshLogDraw();
         });
@@ -84,14 +109,14 @@ var App = {
             App.RefreshLogDraw();
         });
         App.SpawnCounter();
-        if (App.Ticker === null) {
-            App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
-        }
+        window.requestAnimationFrame(App.Loop);        
     },
 
-    UpdateTime: function() {
-        App.Time.currTime = Date.now();
+    UpdateTime: function(timestamp) {
+        if (App.Time.currTime === 0) App.Time.currTime  = App.Time.lastTime = timestamp;
+        App.Time.currTime = timestamp;
         App.Time.deltaTime = App.Time.currTime - App.Time.lastTime;
+        App.AddFPS(App.Time.deltaTime);
         App.Time.elapsedTotal += App.Time.deltaTime;
         App.Time.elapsedSinceSpawn += App.Time.deltaTime;
         App.Time.lastTime = App.Time.currTime;
@@ -130,7 +155,7 @@ var App = {
     },
 
     DrawTitle: function() {
-        document.title = (App.Params.Focused ? "Focused" : "Blurred") + ": UpdateSpeed = " + (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS);
+        document.title = (App.Params.Focused ? "Focus" : "Blur") + ": " + App.Time.fps() + " fps";
     },
 
     DrawCounters: function() {
@@ -277,16 +302,11 @@ var App = {
         }
     },
 
-    Loop: function() {
-        App.UpdateTime();
+    Loop: function(timestamp) {
+        App.UpdateTime(timestamp);
         App.Logic();
         App.Draw();
-        App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
-    },
-
-    ResetTimeout: function() {
-        clearTimeout(App.Ticker);
-        App.Loop();
+        window.requestAnimationFrame(App.Loop);
     },
 
     Counter: function(name, time, resource, func) {
@@ -427,7 +447,7 @@ var App = {
             }
         }
         this.addEnemy = function(enemy) {
-            enemyList.push(enemy);
+            this.enemyList.push(enemy);
         }
         this.getEnemies = function() {
             return this.enemyList;
@@ -440,25 +460,89 @@ var App = {
         }
     },
 
-    Crewmember: function() {
-
+    Crewmember: function(name, abilities, specialization) {
+        this.name = name;
+        this.abilities = abilities;
+        this.specialization = specialization;
+        this.level = 0;
+        this.gearLevel = 0;
+        this.rank = 0;
+        this.getName = function() {
+            return this.name;
+        }
+        this.setName = function(name) {
+            this.name = name;
+        }
+        this.setAbilities = function(other_abilities) {
+            // if an array of abilities was passed in
+            // (as should always be the case, if I'm smart!)
+            if (Array.isArray(other_abilities)) {
+                for (i = 0; i < other_abilities.length; i++) {
+                    this.abilities.push(other_abilities[i]);
+                }
+            }
+            // Otherwise, I'm a doofus, and only passed in one ability,
+            // but we'll cover my ignorance/forgetfulness/utter failure anyways.
+            // I may be dumb, but I'm kind to myself!
+            else {
+                this.abilities.push(other_abilities);
+            }
+        }
     },
 
     Ability: function() {
 
     },
 
-    Specialization: function() {
-
+    Specialization: function(name, desc) {
+        this.name = name;
+        this.desc = desc;
+        this.getName = function() {
+            return this.name;
+        }
+        this.getDescription = function() {
+            return this.desc;
+        }
     },
+
+    Specializations: [
+        new Specialization("Bloodlust", "A born warrior, who lives for the onrush of battle."),
+        new Specialization("Keen Eye", "An eagle-eyed hunter, finder of hidden things."),
+        new Specialization("Unflinching", "With nerves of steel, this guardian stands unbending."),
+        new Specialization("Stealthy", "Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape."),
+        new Specialization("Thaumaturge", "Ancient magics snake in tendrils from the scholar's learned fingertips.")
+    ],
 
     Enemy: function() {
 
     },
 
-    MissionType: function() {
+    EnemyAbility: function() {
 
     },
+
+    MissionType: function(name, desc, favor) {
+        this.name = name;
+        this.desc = desc;
+        this.favor = favor;
+        this.getName = function() {
+            return this.name;
+        }
+        this.getDescription = function() {
+            return this.desc;
+        }
+        this.getFavoredSpecialization = function() {
+            return App.Specializations[this.favor];
+        }
+    },
+
+    MissionTypes: [
+        new MissionType("Kill", "Defeat your foes.", 0),
+        new MissionType("Collect", "Find helpful supplies.", 1),
+        new MissionType("Defend", "Repel the invaders.", 2),
+        new MissionType("Scout", "Survey new territories.", 3),
+        new MissionType("Ward", "Protect against encroaching magic.", 4)
+    ],
 
     AbilityType: function() {
 
@@ -468,6 +552,24 @@ var App = {
         this.level = 0;
         this.gearLevel = 0;
         this.rankLevel = 0;
+        this.setLevel = function(lev) {
+            this.level = lev;
+        }
+        this.getLevel = function() {
+            return this.level;
+        }
+        this.setGearLevel = function(lev) {
+            this.gearLevel = lev;
+        }
+        this.getGearLevel = function() {
+            return this.gearLevel;
+        }
+        this.setRankLevel = function(lev) {
+            this.rankLevel = lev;
+        }
+        this.getRankLevel = function() {
+            return this.rankLevel;
+        }
     },
 
     Rank: {
@@ -480,7 +582,6 @@ var App = {
 
 window.addEventListener('focus', function() {
     App.Params.Focused = true;
-    App.ResetTimeout();
 }, false);
 
 window.addEventListener('blur', function() {
