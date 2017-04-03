@@ -460,18 +460,18 @@ var App = {
         }
     },
 
-    Crewmember: function(name, abilities, specialization) {
-        this.name = name;
-        this.abilities = abilities;
-        this.specialization = specialization;
+    Crewmember: function() {
+        this.cName = "";
+        this.abilities = null;
+        this.specialization = null;
         this.level = 0;
         this.gearLevel = 0;
         this.rank = 0;
         this.getName = function() {
-            return this.name;
+            return this.cName;
         }
         this.setName = function(name) {
-            this.name = name;
+            this.cName = name;
         }
         this.setAbilities = function(other_abilities) {
             // if an array of abilities was passed in
@@ -486,6 +486,49 @@ var App = {
             // I may be dumb, but I'm kind to myself!
             else {
                 this.abilities.push(other_abilities);
+            }
+        }
+        this.getSpecialization = function() {
+            return this.specialization;
+        }
+        this.setSpecialization = function(spec) {
+            this.specialization = spec;
+        }
+        this.getLevel = function() {
+            return this.level;
+        }
+        this.setLevel = function(lev) {
+            if (lev < 1) lev = 1;
+            if (lev > 100) lev = 100;
+            this.level = lev;
+        }
+        this.levelUp = function() {
+            if (this.level == 100) return;
+            this.level++;
+        }
+        this.getGearLevel = function() {
+            return this.gearLevel;
+        }
+        this.setGearLevel = function(newLevel) {
+            this.gearLevel = newLevel;
+        }
+        this.increaseGearLevel = function(increase) {
+            this.gearLevel += increase;
+        }
+        this.getRank = function() {
+            return App.Rank[this.rank];
+        }
+        this.setRank = function(rank) {
+            if (rank < 0) rank = 0;
+            if (rank >= App.Rank.length) rank = App.Rank.length - 1;
+            this.rank = rank;
+        }
+        this.increaseRank = function(amount) {
+            increase = 1;
+            if (amount) increase = amount;
+            while (this.rank < App.Rank.length - 1 && increase > 0) {
+                this.rank++;
+                this.increase--;
             }
         }
     },
@@ -514,11 +557,76 @@ var App = {
     ],
 
     Enemy: function() {
-
+        this.eName = "";
+        this.abilities = [];
+        this.level = 0;
+        this.rank = -1;
+        this.gearLevel = 0;
+        this.setName = function(name) {
+            this.eName = name;
+        }
+        this.getName = function() {
+            return this.eName;
+        }
+        this.getAbilities = function() {
+            return this.abilities;
+        }
+        this.setAbilities = function(other_abilities) {
+            if (Array.isArray(other_abilities)) {
+                for (i = 0; i < other_abilities.length; i++) {
+                    this.abilities.push(other_abilities[i]);
+                }
+            }
+            // Otherwise, I'm a doofus, and only passed in one ability,
+            // but we'll cover my ignorance/forgetfulness/utter failure anyways.
+            // I may be dumb, but I'm kind to myself!
+            else {
+                this.abilities.push(other_abilities);
+            }
+        }
+        this.addAbility = function(ability) {
+            this.abilities.push(ability);
+        }
+        this.getLevel = function() {
+            return this.level;
+        }
+        this.setLevel = function(level) {
+            if (level < 0) level = 0;
+            if (level > 100) level = 100;
+            this.level = level;
+        }
+        this.gainLevel = function(amount) {
+            levelsToGain = 1;
+            if (amount) levelsToGain = amount;
+            while (this.level <= 100 && levelsToGain > 0) {
+                this.level++;
+                levelsToGain--;
+            }
+        }
+        this.getRank = function() {
+            return App.Rank[this.rank];
+        }
+        this.setRankLevel = function(rank) {
+            if (rank < 0) rank = 0;
+            if (rank > App.Rank.length - 1) rank = App.Rank.length - 1;
+            this.rank = rank;
+        }
+        this.increaseRank = function(amount) {
+            if (this.rank == App.Rank.length - 1) {
+                console.log("Max rank reached.");
+                return;
+            }            
+            amountToIncrease = 1;
+            if (amount) amountToIncrease = amount;
+            while(this.rank < App.Rank.length - 1 && amountToIncrease > 0) {
+                this.rank++;
+                amountToIncrease--;
+            }
+        }
     },
 
     EnemyAbility: function() {
-
+        
     },
 
     MissionType: function(name, desc, favor) {
@@ -544,15 +652,37 @@ var App = {
         new MissionType("Ward", "Protect against encroaching magic.", 4)
     ],
 
-    AbilityType: function() {
-
+    AbilityType: function(name, desc) {
+        this.tName = name;
+        this.desc = desc;
+        this.getName = function() {
+            return this.name;
+        }
+        this.getDescription = function() {
+            return this.desc;
+        }
     },
+
+    AbilityTypes: [
+        new AbilityType("Reduced success chance: physical", 
+            "Overwhelming force cows all but the most stalwart, threatening to turn victory into defeat."),
+        new AbilityType("Reduced success chance: magic",
+            "Neither blade nor bow nor buckler can stand against the ancient rites, and warriors' boldness turns to blanching retreat."),
+        new AbilityType("Reduced success chance: mental",
+            "Sword and spell cannot avail once fear and doubt enter the mind, and fear of defeat makes the defeat all the more certain."),
+        new AbilityType("Increased mission time",
+            "Though courage flags not, both enemies and elements conspire to delay and impede, doing all they may to avoid or postpone the conflict."),
+        new AbilityType("Increased mission cost",
+            "Strength and steel alone do not win the war; blades do not swing without the backing of pay and provisions.")
+    ],
 
     Requirements: function() {
         this.level = 0;
         this.gearLevel = 0;
         this.rankLevel = 0;
         this.setLevel = function(lev) {
+            if (lev < 1) lev = 1;
+            if (lev > 100) lev = 100;
             this.level = lev;
         }
         this.getLevel = function() {
@@ -565,19 +695,24 @@ var App = {
             return this.gearLevel;
         }
         this.setRankLevel = function(lev) {
+            if (lev < 0) lev = 0;
+            if (lev >= App.Rank.length) lev = App.Rank.length - 1;
             this.rankLevel = lev;
         }
         this.getRankLevel = function() {
             return this.rankLevel;
         }
+        this.getRank = function() {
+            return App.Rank[this.rankLevel];
+        }
     },
 
-    Rank: {
-        Apprentice: 1,
-        Skilled: 2,
-        Master: 3, 
-        Champion: 4
-    }
+    Rank: [
+        "Apprentice",
+        "Skilled",
+        "Master", 
+        "Champion"
+    ],
 };
 
 window.addEventListener('focus', function() {
