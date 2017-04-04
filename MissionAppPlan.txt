@@ -37,6 +37,28 @@ Crew members also have one to several abilities (tied to spec at all? Additional
 
 Crew members also can have (and learn?) traits, which grant bonuses when faced with certain types of threats (for example, +20% chance of success when facing slowing abilities, increased rewards when successfully countering mental threats, etc.)
 
+Mission Rewards:
+    // These rewards have an amount, and increase the relevant counter
+    Gold
+    Resources:
+        Leather,
+        Cloth,
+        Steel,
+        Wood
+
+    // These rewards are one apiece, and add to inventory or crew
+    Equipment:
+        Armor,
+        Weapons,
+        Trinkets (not till max level)
+    Crew
+
+    // These rewards modify base game stats/settings, except for learning new skills, which would probably be an item that gets applied to a crewmember, so inventory?
+    Special:
+        Learn a new skill
+        Increase crew capacity
+        Decrease costs/times
+
 Needed constructs:
 
 Mission:

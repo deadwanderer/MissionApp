@@ -415,8 +415,18 @@ var App = {
         }
     },
 
-    Mission: function() {
+    Mission: function(id) {
         this.defaultDuration = 5000;
+        this.id = id;
+        this.mName = "";
+        this.desc = "";
+        this.missionType = -1;
+        this.duration = -1;
+        this.enemyList = [];
+        this.crewList = [];
+        this.maxCrew = 1;
+        this.requirements = null;
+        this.rewards = null;
         this.setType = function(missionType) {
             this.missionType = missionType;
         }
@@ -426,18 +436,21 @@ var App = {
             }
             return null;
         }
+        this.getMissionType = function() {
+            return App.MissionTypes[this.missionType];
+        }
         this.setDuration = function(duration) {
             this.duration = duration;
         }
         this.getDuration = function() {
-            if (this.duration) {
+            if (this.duration >= 0) {
                 return this.duration;
             }
             else {
+                console.log("NOTICE: mission duration not set")
                 return this.defaultDuration;
             } 
         }
-        this.enemyList = []
         this.setEnemies = function(enemies) {
             if (Array.isArray(enemies)) {
                 this.enemyList = enemies;
@@ -533,29 +546,6 @@ var App = {
         }
     },
 
-    Ability: function() {
-
-    },
-
-    Specialization: function(name, desc) {
-        this.name = name;
-        this.desc = desc;
-        this.getName = function() {
-            return this.name;
-        }
-        this.getDescription = function() {
-            return this.desc;
-        }
-    },
-
-    Specializations: [
-        new Specialization("Bloodlust", "A born warrior, who lives for the onrush of battle."),
-        new Specialization("Keen Eye", "An eagle-eyed hunter, finder of hidden things."),
-        new Specialization("Unflinching", "With nerves of steel, this guardian stands unbending."),
-        new Specialization("Stealthy", "Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape."),
-        new Specialization("Thaumaturge", "Ancient magics snake in tendrils from the scholar's learned fingertips.")
-    ],
-
     Enemy: function() {
         this.eName = "";
         this.abilities = [];
@@ -625,9 +615,104 @@ var App = {
         }
     },
 
-    EnemyAbility: function() {
-        
+    Specialization: function(name, desc) {
+        this.name = name;
+        this.desc = desc;
+        this.getName = function() {
+            return this.name;
+        }
+        this.getDescription = function() {
+            return this.desc;
+        }
     },
+
+    Specializations: [
+        new Specialization("Bloodlust", "A born warrior, who lives for the onrush of battle."),
+        new Specialization("Keen Eye", "An eagle-eyed hunter, finder of hidden things."),
+        new Specialization("Unflinching", "With nerves of steel, this guardian stands unbending."),
+        new Specialization("Stealthy", "Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape."),
+        new Specialization("Thaumaturge", "Ancient magics snake in tendrils from the scholar's learned fingertips.")
+    ],
+
+    HeroAbility: function(name, desc, abilityType, counters) {
+        this.aName = name;
+        this.desc = desc;
+        this.abilityType = abilityType;
+        this.counters = counters;
+        this.getName = function() {
+            return this.aName;
+        }
+        this.getDescription = function() {
+            return this.desc;
+        }
+        this.getAbilityType = function() {
+            return App.HeroAbilityTypes[this.abilityType];
+        }
+        this.getCounter = function() {
+            return this.counters;
+        }
+        this.getCounteredAbility = function() {
+            return App.EnemyAbilities[this.counters];
+        }
+    },
+
+    HeroAbilities: [
+        new HeroAbility("Unbreaking Bulwark", "", 0, 0),
+        new HeroAbility("Storm Of Fire", "", 0, 1),
+        new HeroAbility("Melt Steel", "", 0, 2),
+        new HeroAbility("Quenching Rain", "", 1, 3),
+        new HeroAbility("Arcane Annulment", "", 1, 4),
+        new HeroAbility("Dispel Magic", "", 1, 5),
+        new HeroAbility("Hymn Of Courage", "", 2, 6),
+        new HeroAbility("Heroic Stance", "", 2, 7),
+        new HeroAbility("Death Hath No Fury", "", 2, 8),
+        new HeroAbility("Scorch", "", 3, 9),
+        new HeroAbility("Invigorate", "", 3, 10),
+        new HeroAbility("Levitate", "", 3, 11),
+        new HeroAbility("Cushioned Saddle", "", 4, 12),
+        new HeroAbility("Friends In High Places", "", 4, 13),
+        new HeroAbility("Teleport", "", 4, 14)
+    ],
+
+    EnemyAbility: function(name, desc, abilityType, countered) {
+        this.aName = name;
+        this.desc = desc;
+        this.abilityType = abilityType;
+        this.counteredBy = countered;
+        this.getName = function() {
+            return this.aName;
+        }
+        this.getDescription = function() {
+            return this.desc;
+        }
+        this.getAbilityType = function() {
+            return App.EnemyAbilityTypes[this.abilityType];
+        }
+        this.getCounter = function() {
+            return this.counteredBy;
+        }
+        this.getCounteringAbility = function() {
+            return App.HeroAbilities[this.counteredBy];
+        }
+    },
+
+    EnemyAbilities: [
+        new EnemyAbility("Crushing", "", 0, 0),
+        new EnemyAbility("Horde", "", 0, 1),
+        new EnemyAbility("Armored", "", 0, 2),
+        new EnemyAbility("Fireblast", "", 1, 3),
+        new EnemyAbility("Arcane Storm", "", 1, 4),
+        new EnemyAbility("Rune Of Aegis", "", 1, 5),
+        new EnemyAbility("Intimidate", "", 2, 6),
+        new EnemyAbility("Reaving Shout", "", 2, 7),
+        new EnemyAbility("Aura Of Bones", "", 2, 8),
+        new EnemyAbility("Web", "", 3, 9),
+        new EnemyAbility("Torpor", "", 3, 10),
+        new EnemyAbility("Quagmire", "", 3, 11),
+        new EnemyAbility("Rough Terrain", "", 4, 12),
+        new EnemyAbility("Toll Roads", "", 4, 13),
+        new EnemyAbility("In The Sticks", "", 4, 14)
+    ],
 
     MissionType: function(name, desc, favor) {
         this.name = name;
@@ -663,7 +748,7 @@ var App = {
         }
     },
 
-    AbilityTypes: [
+    EnemyAbilityTypes: [
         new AbilityType("Reduced success chance: physical", 
             "Overwhelming force cows all but the most stalwart, threatening to turn victory into defeat."),
         new AbilityType("Reduced success chance: magic",
@@ -674,6 +759,19 @@ var App = {
             "Though courage flags not, both enemies and elements conspire to delay and impede, doing all they may to avoid or postpone the conflict."),
         new AbilityType("Increased mission cost",
             "Strength and steel alone do not win the war; blades do not swing without the backing of pay and provisions.")
+    ],
+
+    HeroAbilityTypes: [
+        new AbilityType("Increased success chance: physical",
+            "Fearless in the fray, unshaken in the onrush, the unbowed strength of the guardian forges victory from daunting odds."),
+        new AbilityType("Increased success chance: magic",
+            "Not all magical arts destroy; the wise wizards also use their arcanism to defend and heal their companions, and negate enemy magicks."),
+        new AbilityType("Increased success chance: mental",
+            "Steadying the mind and drawing courage from comrades will steady the hands and draw battle lines more amenable to triumph."),
+        new AbilityType("Decreased mission time",
+            "Wise planning, sharp eyes, and preparation aforehand will annul and forestall the obstacles laid by both nature and one's foes."),
+        new AbilityType("Decreased mission cost",
+            "Shrewd tongues, well-placed allies, and judicious use of arcane manupulation can ease both the strife, the journey, and the pocketbook."),
     ],
 
     Requirements: function() {
@@ -706,6 +804,48 @@ var App = {
             return App.Rank[this.rankLevel];
         }
     },
+
+    Reward: function(name, desc, type, applyFunc, amount) {
+        this.rewardType = type;
+        this.rName = name;
+        this.desc = desc;
+        this.rewardAmount = 1;
+        if (amount === undefined) {
+
+        } else {
+            this.rewardAmount = amount;
+        }
+        this.applyFunc = applyFunc;
+        this.getName = function() {
+            return this.rName;
+        }
+        this.getDescription = function() {
+            return this.desc;
+        }
+        this.getRewardType = function() {
+            return App.RewardType[this.rewardType];
+        }
+        this.getRewardAmount = function() {
+            return this.rewardAmount;
+        }
+        this.apply = function(target) {
+            this.applyFunc(target, this.rewardType, this.rewardAmount);
+        }
+    },
+
+    RewardType: [
+        "Gold",
+        "Leather",
+        "Cloth",
+        "Steel",
+        "Wood",
+        "Armor",
+        "Weapon",
+        "Trinket",
+        "Crew",
+        "Skill",
+        "Special"
+    ],
 
     Rank: [
         "Apprentice",
