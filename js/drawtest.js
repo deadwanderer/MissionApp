@@ -48,7 +48,10 @@ var App = {
         Stone: 0,
         Food: 0,
         Leather: 0,
-        Gold: 0
+        Gold: 0,
+        Cloth: 0,
+        Steel: 0,
+        Wood: 0
     },
 
     LogLines: [],
@@ -57,7 +60,7 @@ var App = {
     LogFadeTime: 2000,
     LogMaxLength: 15,
 
-    ResourceType: ["Stone", "Food", "Leather", "Gold"],
+    ResourceType: ["Stone", "Food", "Leather", "Gold", "Cloth", "Steel", "Wood"],
 
     Time: {
         currTime: 0,
@@ -657,21 +660,21 @@ var App = {
     },
 
     HeroAbilities: [
-        new HeroAbility("Unbreaking Bulwark", "", 0, 0),
-        new HeroAbility("Storm Of Fire", "", 0, 1),
-        new HeroAbility("Melt Steel", "", 0, 2),
-        new HeroAbility("Quenching Rain", "", 1, 3),
-        new HeroAbility("Arcane Annulment", "", 1, 4),
-        new HeroAbility("Dispel Magic", "", 1, 5),
-        new HeroAbility("Hymn Of Courage", "", 2, 6),
-        new HeroAbility("Heroic Stance", "", 2, 7),
-        new HeroAbility("Death Hath No Fury", "", 2, 8),
-        new HeroAbility("Scorch", "", 3, 9),
-        new HeroAbility("Invigorate", "", 3, 10),
-        new HeroAbility("Levitate", "", 3, 11),
-        new HeroAbility("Cushioned Saddle", "", 4, 12),
-        new HeroAbility("Friends In High Places", "", 4, 13),
-        new HeroAbility("Teleport", "", 4, 14)
+        new HeroAbility("Unbreaking Bulwark", "Your blacksmiths have crafted reinforced shields, which your stoutest fighters wield to repulse even the mightiest blows.", 0, 0),
+        new HeroAbility("Storm Of Fire", "Your mages conjure a whirling tower of flame, cowing the enemy minions into desperate flight.", 0, 1),
+        new HeroAbility("Melt Steel", "Searing blasts of arcane heat from your mages reduce enemy armor to dripping puddles, revealing the soft flesh beneath, ripe for the cutting.", 0, 2),
+        new HeroAbility("Quenching Rain", "Your shamans whisper stormwords, bringing great rainshowers to bear on the threatening flames. Soon, only wisps of steam remain.", 1, 3),
+        new HeroAbility("Arcane Annulment", "Energy barriers block the arcane energy, and the blasts bounce harmlessly back into the ether.", 1, 4),
+        new HeroAbility("Dispel Magic", "Your mages' gutteral phrases send runic lightning blasting through the enemy spellshields, shattering the glimmering defenses.", 1, 5),
+        new HeroAbility("Hymn Of Courage", "Your bards' strong voices waft in song over your troops, raising a bold chant to the skies, and bringing courage rushing back to wavering hearts.", 2, 6),
+        new HeroAbility("Heroic Stance", "Your champions plant themselves in fearless bearing, a sturdy example that bolsters your troops and grants fresh boldness.", 2, 7),
+        new HeroAbility("Death Hath No Fury", "One of your bards cracks a crude joke about the enemy, and the ensuing laughter cuts through the mental fog, revealing promise of great glory in battle.", 2, 8),
+        new HeroAbility("Scorch", "A quick-thinking mage wreathes you in a flash of fire that burns away all bindings, and leaves a nice new sheen on your armor, to boot!", 3, 9),
+        new HeroAbility("Invigorate", "Your commissary brings steaming draughts of sharp liquor, that burns all sluggishness away as it courses through your body.", 3, 10),
+        new HeroAbility("Levitate", "Your mages twist spacetime briefly, pulling you up from the mire and allowing your company to float to solid ground.", 3, 11),
+        new HeroAbility("Cushioned Saddle", "Your sure-footed horses can pick their way through all dangers of the road, and your saddle's padding prevents soreness at the end of the bumpy day.", 4, 12),
+        new HeroAbility("Friends In High Places", "A quick missive to your cousin at court grants you a diplomatic visa, and a full refund for all tolls incurred.", 4, 13),
+        new HeroAbility("Teleport", "Arcanic stones are expensive, sure, but the portals you open with them to allow instantaneous transfers of supplies are still far cheaper than the price-gouging mule-train owners.", 4, 14)
     ],
 
     EnemyAbility: function(name, desc, abilityType, countered) {
@@ -697,21 +700,21 @@ var App = {
     },
 
     EnemyAbilities: [
-        new EnemyAbility("Crushing", "", 0, 0),
-        new EnemyAbility("Horde", "", 0, 1),
-        new EnemyAbility("Armored", "", 0, 2),
-        new EnemyAbility("Fireblast", "", 1, 3),
-        new EnemyAbility("Arcane Storm", "", 1, 4),
-        new EnemyAbility("Rune Of Aegis", "", 1, 5),
-        new EnemyAbility("Intimidate", "", 2, 6),
-        new EnemyAbility("Reaving Shout", "", 2, 7),
-        new EnemyAbility("Aura Of Bones", "", 2, 8),
-        new EnemyAbility("Web", "", 3, 9),
-        new EnemyAbility("Torpor", "", 3, 10),
-        new EnemyAbility("Quagmire", "", 3, 11),
-        new EnemyAbility("Rough Terrain", "", 4, 12),
-        new EnemyAbility("Toll Roads", "", 4, 13),
-        new EnemyAbility("In The Sticks", "", 4, 14)
+        new EnemyAbility("Crushing", "This enemy rains heavy blows upon foes, demolishing armor and breaking bones.", 0, 0),
+        new EnemyAbility("Horde", "This enemy has an entourage of footsoldiers, threatening to overwhelm any who approach.", 0, 1),
+        new EnemyAbility("Armored", "Thick plates of sturdy metals deflect even the fiercest blows, giving blades no purchase and no hope of victory.", 0, 2),
+        new EnemyAbility("Fireblast", "An explosion of flame and heat sears skin and turns armor from protecting shell to infernal entrapment.", 1, 3),
+        new EnemyAbility("Arcane Storm", "The air glows and cracks with blue-white magic, and eldritch tendrils snake through metal and hide alike, lashing the life beneath.", 1, 4),
+        new EnemyAbility("Rune Of Aegis", "An impassable barrier of pure mana prevents all foes from approaching the caster.", 1, 5),
+        new EnemyAbility("Intimidate", "The necklace of scalps, the blood-drenched blade, and the smoldering eyes signal that this enemy harbors great skill in battle, and no mercy for attackers.", 2, 6),
+        new EnemyAbility("Reaving Shout", "A fearsome roar that somehow carries both physical and psychic force, chilling the hearts of all who hear it.", 2, 7),
+        new EnemyAbility("Aura Of Bones", "Death seeps in ashen strands from the fingers of this enemy, and foliage withers to dust as they pass.", 2, 8),
+        new EnemyAbility("Web", "Sticky cords wrap around you, encasing your extremities in an entangling mesh.", 3, 9),
+        new EnemyAbility("Torpor", "A heavy weariness seeps through your blood, and your legs become too heavy to lift. All you want is to close your leaden eyes and leave your toils forever.", 3, 10),
+        new EnemyAbility("Quagmire", "The solid grounds suddenly gives way to sucking muck, that grasps at your legs and pulls you down towards its dark and inexorable depths.", 3, 11),
+        new EnemyAbility("Rough Terrain", "These paths have seen no travelers for an age, and thick roots and vines obscure the sharp rocks and dangerous holes beneath. One wrong step threatens to snap bones and shatter equipment, and your staff balks without hazard pay.", 4, 12),
+        new EnemyAbility("Toll Roads", "Your convoy passes through a foreign country with heavy fees for those who are merely visiting. Next time, maybe buy something while you're passing through!", 4, 13),
+        new EnemyAbility("In The Sticks", "Your destination lies far from any supply depot, and you are forced to import supplies by mule, whose owners demand a high premium.", 4, 14)
     ],
 
     MissionType: function(name, desc, favor) {
@@ -833,7 +836,14 @@ var App = {
         }
     },
 
+    AmountRewardFunc: function(target, type, amount) {
+        App.ResourceList[App.RewardType[type]] += amount;
+        App.Log("Added " + amount + " " + type);
+    },
+
     RewardType: [
+        "Food",
+        "Stone",
         "Gold",
         "Leather",
         "Cloth",
