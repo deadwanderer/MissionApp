@@ -111,8 +111,77 @@ var App = {
         $("#log").on("scroll", function() {
             App.RefreshLogDraw();
         });
+        App.InitArrays();
         App.SpawnCounter();
         window.requestAnimationFrame(App.Loop);        
+    },
+
+    InitArrays: function() {
+        App.Specializations.push(new App.Specialization("Bloodlust", "A born warrior, who lives for the onrush of battle."));
+        App.Specializations.push(new App.Specialization("Keen Eye", "An eagle-eyed hunter, finder of hidden things."));
+        App.Specializations.push(new App.Specialization("Unflinching", "With nerves of steel, this guardian stands unbending."));
+        App.Specializations.push(new App.Specialization("Stealthy", "Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape."));
+        App.Specializations.push(new App.Specialization("Thaumaturge", "Ancient magics snake in tendrils from the scholar's learned fingertips."));
+
+        App.HeroAbilities.push(new App.HeroAbility("Unbreaking Bulwark", "Your blacksmiths have crafted reinforced shields, which your stoutest fighters wield to repulse even the mightiest blows.", 0, 0));
+        App.HeroAbilities.push(new App.HeroAbility("Storm Of Fire", "Your mages conjure a whirling tower of flame, cowing the enemy minions into desperate flight.", 0, 1));
+        App.HeroAbilities.push(new App.HeroAbility("Melt Steel", "Searing blasts of arcane heat from your mages reduce enemy armor to dripping puddles, revealing the soft flesh beneath, ripe for the cutting.", 0, 2));
+        App.HeroAbilities.push(new App.HeroAbility("Quenching Rain", "Your shamans whisper stormwords, bringing great rainshowers to bear on the threatening flames. Soon, only wisps of steam remain.", 1, 3));
+        App.HeroAbilities.push(new App.HeroAbility("Arcane Annulment", "Energy barriers block the arcane energy, and the blasts bounce harmlessly back into the ether.", 1, 4));
+        App.HeroAbilities.push(new App.HeroAbility("Dispel Magic", "Your mages' gutteral phrases send runic lightning blasting through the enemy spellshields, shattering the glimmering defenses.", 1, 5));
+        App.HeroAbilities.push(new App.HeroAbility("Hymn Of Courage", "Your bards' strong voices waft in song over your troops, raising a bold chant to the skies, and bringing courage rushing back to wavering hearts.", 2, 6));
+        App.HeroAbilities.push(new App.HeroAbility("Heroic Stance", "Your champions plant themselves in fearless bearing, a sturdy example that bolsters your troops and grants fresh boldness.", 2, 7));
+        App.HeroAbilities.push(new App.HeroAbility("Death Hath No Fury", "One of your bards cracks a crude joke about the enemy, and the ensuing laughter cuts through the mental fog, revealing promise of great glory in battle.", 2, 8));
+        App.HeroAbilities.push(new App.HeroAbility("Scorch", "A quick-thinking mage wreathes you in a flash of fire that burns away all bindings, and leaves a nice new sheen on your armor, to boot!", 3, 9));
+        App.HeroAbilities.push(new App.HeroAbility("Invigorate", "Your commissary brings steaming draughts of sharp liquor, that burns all sluggishness away as it courses through your body.", 3, 10));
+        App.HeroAbilities.push(new App.HeroAbility("Levitate", "Your mages twist spacetime briefly, pulling you up from the mire and allowing your company to float to solid ground.", 3, 11));
+        App.HeroAbilities.push(new App.HeroAbility("Cushioned Saddle", "Your sure-footed horses can pick their way through all dangers of the road, and your saddle's padding prevents soreness at the end of the bumpy day.", 4, 12));
+        App.HeroAbilities.push(new App.HeroAbility("Friends In High Places", "A quick missive to your cousin at court grants you a diplomatic visa, and a full refund for all tolls incurred.", 4, 13));
+        App.HeroAbilities.push(new App.HeroAbility("Teleport", "Arcanic stones are expensive, sure, but the portals you open with them to allow instantaneous transfers of supplies are still far cheaper than the price-gouging mule-train owners.", 4, 14));
+
+        App.EnemyAbilities.push(new App.EnemyAbility("Crushing", "This enemy rains heavy blows upon foes, demolishing armor and breaking bones.", 0, 0));
+        App.EnemyAbilities.push(new App.EnemyAbility("Horde", "This enemy has an entourage of footsoldiers, threatening to overwhelm any who approach.", 0, 1));
+        App.EnemyAbilities.push(new App.EnemyAbility("Armored", "Thick plates of sturdy metals deflect even the fiercest blows, giving blades no purchase and no hope of victory.", 0, 2));
+        App.EnemyAbilities.push(new App.EnemyAbility("Fireblast", "An explosion of flame and heat sears skin and turns armor from protecting shell to infernal entrapment.", 1, 3));
+        App.EnemyAbilities.push(new App.EnemyAbility("Arcane Storm", "The air glows and cracks with blue-white magic, and eldritch tendrils snake through metal and hide alike, lashing the life beneath.", 1, 4));
+        App.EnemyAbilities.push(new App.EnemyAbility("Rune Of Aegis", "An impassable barrier of pure mana prevents all foes from approaching the caster.", 1, 5));
+        App.EnemyAbilities.push(new App.EnemyAbility("Intimidate", "The necklace of scalps, the blood-drenched blade, and the smoldering eyes signal that this enemy harbors great skill in battle, and no mercy for attackers.", 2, 6));
+        App.EnemyAbilities.push(new App.EnemyAbility("Reaving Shout", "A fearsome roar that somehow carries both physical and psychic force, chilling the hearts of all who hear it.", 2, 7));
+        App.EnemyAbilities.push(new App.EnemyAbility("Aura Of Bones", "Death seeps in ashen strands from the fingers of this enemy, and foliage withers to dust as they pass.", 2, 8));
+        App.EnemyAbilities.push(new App.EnemyAbility("Web", "Sticky cords wrap around you, encasing your extremities in an entangling mesh.", 3, 9));
+        App.EnemyAbilities.push(new App.EnemyAbility("Torpor", "A heavy weariness seeps through your blood, and your legs become too heavy to lift. All you want is to close your leaden eyes and leave your toils forever.", 3, 10));
+        App.EnemyAbilities.push(new App.EnemyAbility("Quagmire", "The solid grounds suddenly gives way to sucking muck, that grasps at your legs and pulls you down towards its dark and inexorable depths.", 3, 11));
+        App.EnemyAbilities.push(new App.EnemyAbility("Rough Terrain", "These paths have seen no travelers for an age, and thick roots and vines obscure the sharp rocks and dangerous holes beneath. One wrong step threatens to snap bones and shatter equipment, and your staff balks without hazard pay.", 4, 12));
+        App.EnemyAbilities.push(new App.EnemyAbility("Toll Roads", "Your convoy passes through a foreign country with heavy fees for those who are merely visiting. Next time, maybe buy something while you're passing through!", 4, 13));
+        App.EnemyAbilities.push(new App.EnemyAbility("In The Sticks", "Your destination lies far from any supply depot, and you are forced to import supplies by mule, whose owners demand a high premium.", 4, 14));
+        
+        App.MissionTypes.push(new App.MissionType("Kill", "Defeat your foes.", 0));
+        App.MissionTypes.push(new App.MissionType("Collect", "Find helpful supplies.", 1));
+        App.MissionTypes.push(new App.MissionType("Defend", "Repel the invaders.", 2));
+        App.MissionTypes.push(new App.MissionType("Scout", "Survey new territories.", 3));
+        App.MissionTypes.push(new App.MissionType("Ward", "Protect against encroaching magic.", 4));
+
+        App.EnemyAbilityTypes.push(new App.AbilityType("Reduced success chance: physical", 
+            "Overwhelming force cows all but the most stalwart, threatening to turn victory into defeat."));
+        App.EnemyAbilityTypes.push(new App.AbilityType("Reduced success chance: magic",
+            "Neither blade nor bow nor buckler can stand against the ancient rites, and warriors' boldness turns to blanching retreat."));
+        App.EnemyAbilityTypes.push(new App.AbilityType("Reduced success chance: mental",
+            "Sword and spell cannot avail once fear and doubt enter the mind, and fear of defeat makes the defeat all the more certain."));
+        App.EnemyAbilityTypes.push(new App.AbilityType("Increased mission time",
+            "Though courage flags not, both enemies and elements conspire to delay and impede, doing all they may to avoid or postpone the conflict."));
+        App.EnemyAbilityTypes.push(new App.AbilityType("Increased mission cost",
+            "Strength and steel alone do not win the war; blades do not swing without the backing of pay and provisions."));
+
+        App.HeroAbilityTypes.push(new App.AbilityType("Increased success chance: physical",
+            "Fearless in the fray, unshaken in the onrush, the unbowed strength of the guardian forges victory from daunting odds."));
+        App.HeroAbilityTypes.push(new App.AbilityType("Increased success chance: magic",
+            "Not all magical arts destroy; the wise wizards also use their arcanism to defend and heal their companions, and negate enemy magicks."));
+        App.HeroAbilityTypes.push(new App.AbilityType("Increased success chance: mental",
+            "Steadying the mind and drawing courage from comrades will steady the hands and draw battle lines more amenable to triumph."));
+        App.HeroAbilityTypes.push(new App.AbilityType("Decreased mission time",
+            "Wise planning, sharp eyes, and preparation aforehand will annul and forestall the obstacles laid by both nature and one's foes."));
+        App.HeroAbilityTypes.push(new App.AbilityType("Decreased mission cost",
+            "Shrewd tongues, well-placed allies, and judicious use of arcane manupulation can ease both the strife, the journey, and the pocketbook."));
     },
 
     UpdateTime: function(timestamp) {
@@ -629,13 +698,7 @@ var App = {
         }
     },
 
-    Specializations: [
-        new Specialization("Bloodlust", "A born warrior, who lives for the onrush of battle."),
-        new Specialization("Keen Eye", "An eagle-eyed hunter, finder of hidden things."),
-        new Specialization("Unflinching", "With nerves of steel, this guardian stands unbending."),
-        new Specialization("Stealthy", "Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape."),
-        new Specialization("Thaumaturge", "Ancient magics snake in tendrils from the scholar's learned fingertips.")
-    ],
+    Specializations: [],
 
     HeroAbility: function(name, desc, abilityType, counters) {
         this.aName = name;
@@ -659,23 +722,7 @@ var App = {
         }
     },
 
-    HeroAbilities: [
-        new HeroAbility("Unbreaking Bulwark", "Your blacksmiths have crafted reinforced shields, which your stoutest fighters wield to repulse even the mightiest blows.", 0, 0),
-        new HeroAbility("Storm Of Fire", "Your mages conjure a whirling tower of flame, cowing the enemy minions into desperate flight.", 0, 1),
-        new HeroAbility("Melt Steel", "Searing blasts of arcane heat from your mages reduce enemy armor to dripping puddles, revealing the soft flesh beneath, ripe for the cutting.", 0, 2),
-        new HeroAbility("Quenching Rain", "Your shamans whisper stormwords, bringing great rainshowers to bear on the threatening flames. Soon, only wisps of steam remain.", 1, 3),
-        new HeroAbility("Arcane Annulment", "Energy barriers block the arcane energy, and the blasts bounce harmlessly back into the ether.", 1, 4),
-        new HeroAbility("Dispel Magic", "Your mages' gutteral phrases send runic lightning blasting through the enemy spellshields, shattering the glimmering defenses.", 1, 5),
-        new HeroAbility("Hymn Of Courage", "Your bards' strong voices waft in song over your troops, raising a bold chant to the skies, and bringing courage rushing back to wavering hearts.", 2, 6),
-        new HeroAbility("Heroic Stance", "Your champions plant themselves in fearless bearing, a sturdy example that bolsters your troops and grants fresh boldness.", 2, 7),
-        new HeroAbility("Death Hath No Fury", "One of your bards cracks a crude joke about the enemy, and the ensuing laughter cuts through the mental fog, revealing promise of great glory in battle.", 2, 8),
-        new HeroAbility("Scorch", "A quick-thinking mage wreathes you in a flash of fire that burns away all bindings, and leaves a nice new sheen on your armor, to boot!", 3, 9),
-        new HeroAbility("Invigorate", "Your commissary brings steaming draughts of sharp liquor, that burns all sluggishness away as it courses through your body.", 3, 10),
-        new HeroAbility("Levitate", "Your mages twist spacetime briefly, pulling you up from the mire and allowing your company to float to solid ground.", 3, 11),
-        new HeroAbility("Cushioned Saddle", "Your sure-footed horses can pick their way through all dangers of the road, and your saddle's padding prevents soreness at the end of the bumpy day.", 4, 12),
-        new HeroAbility("Friends In High Places", "A quick missive to your cousin at court grants you a diplomatic visa, and a full refund for all tolls incurred.", 4, 13),
-        new HeroAbility("Teleport", "Arcanic stones are expensive, sure, but the portals you open with them to allow instantaneous transfers of supplies are still far cheaper than the price-gouging mule-train owners.", 4, 14)
-    ],
+    HeroAbilities: [],
 
     EnemyAbility: function(name, desc, abilityType, countered) {
         this.aName = name;
@@ -699,23 +746,7 @@ var App = {
         }
     },
 
-    EnemyAbilities: [
-        new EnemyAbility("Crushing", "This enemy rains heavy blows upon foes, demolishing armor and breaking bones.", 0, 0),
-        new EnemyAbility("Horde", "This enemy has an entourage of footsoldiers, threatening to overwhelm any who approach.", 0, 1),
-        new EnemyAbility("Armored", "Thick plates of sturdy metals deflect even the fiercest blows, giving blades no purchase and no hope of victory.", 0, 2),
-        new EnemyAbility("Fireblast", "An explosion of flame and heat sears skin and turns armor from protecting shell to infernal entrapment.", 1, 3),
-        new EnemyAbility("Arcane Storm", "The air glows and cracks with blue-white magic, and eldritch tendrils snake through metal and hide alike, lashing the life beneath.", 1, 4),
-        new EnemyAbility("Rune Of Aegis", "An impassable barrier of pure mana prevents all foes from approaching the caster.", 1, 5),
-        new EnemyAbility("Intimidate", "The necklace of scalps, the blood-drenched blade, and the smoldering eyes signal that this enemy harbors great skill in battle, and no mercy for attackers.", 2, 6),
-        new EnemyAbility("Reaving Shout", "A fearsome roar that somehow carries both physical and psychic force, chilling the hearts of all who hear it.", 2, 7),
-        new EnemyAbility("Aura Of Bones", "Death seeps in ashen strands from the fingers of this enemy, and foliage withers to dust as they pass.", 2, 8),
-        new EnemyAbility("Web", "Sticky cords wrap around you, encasing your extremities in an entangling mesh.", 3, 9),
-        new EnemyAbility("Torpor", "A heavy weariness seeps through your blood, and your legs become too heavy to lift. All you want is to close your leaden eyes and leave your toils forever.", 3, 10),
-        new EnemyAbility("Quagmire", "The solid grounds suddenly gives way to sucking muck, that grasps at your legs and pulls you down towards its dark and inexorable depths.", 3, 11),
-        new EnemyAbility("Rough Terrain", "These paths have seen no travelers for an age, and thick roots and vines obscure the sharp rocks and dangerous holes beneath. One wrong step threatens to snap bones and shatter equipment, and your staff balks without hazard pay.", 4, 12),
-        new EnemyAbility("Toll Roads", "Your convoy passes through a foreign country with heavy fees for those who are merely visiting. Next time, maybe buy something while you're passing through!", 4, 13),
-        new EnemyAbility("In The Sticks", "Your destination lies far from any supply depot, and you are forced to import supplies by mule, whose owners demand a high premium.", 4, 14)
-    ],
+    EnemyAbilities: [],
 
     MissionType: function(name, desc, favor) {
         this.name = name;
@@ -732,14 +763,8 @@ var App = {
         }
     },
 
-    MissionTypes: [
-        new MissionType("Kill", "Defeat your foes.", 0),
-        new MissionType("Collect", "Find helpful supplies.", 1),
-        new MissionType("Defend", "Repel the invaders.", 2),
-        new MissionType("Scout", "Survey new territories.", 3),
-        new MissionType("Ward", "Protect against encroaching magic.", 4)
-    ],
-
+    MissionTypes: [],
+    
     AbilityType: function(name, desc) {
         this.tName = name;
         this.desc = desc;
@@ -751,31 +776,9 @@ var App = {
         }
     },
 
-    EnemyAbilityTypes: [
-        new AbilityType("Reduced success chance: physical", 
-            "Overwhelming force cows all but the most stalwart, threatening to turn victory into defeat."),
-        new AbilityType("Reduced success chance: magic",
-            "Neither blade nor bow nor buckler can stand against the ancient rites, and warriors' boldness turns to blanching retreat."),
-        new AbilityType("Reduced success chance: mental",
-            "Sword and spell cannot avail once fear and doubt enter the mind, and fear of defeat makes the defeat all the more certain."),
-        new AbilityType("Increased mission time",
-            "Though courage flags not, both enemies and elements conspire to delay and impede, doing all they may to avoid or postpone the conflict."),
-        new AbilityType("Increased mission cost",
-            "Strength and steel alone do not win the war; blades do not swing without the backing of pay and provisions.")
-    ],
+    EnemyAbilityTypes: [],
 
-    HeroAbilityTypes: [
-        new AbilityType("Increased success chance: physical",
-            "Fearless in the fray, unshaken in the onrush, the unbowed strength of the guardian forges victory from daunting odds."),
-        new AbilityType("Increased success chance: magic",
-            "Not all magical arts destroy; the wise wizards also use their arcanism to defend and heal their companions, and negate enemy magicks."),
-        new AbilityType("Increased success chance: mental",
-            "Steadying the mind and drawing courage from comrades will steady the hands and draw battle lines more amenable to triumph."),
-        new AbilityType("Decreased mission time",
-            "Wise planning, sharp eyes, and preparation aforehand will annul and forestall the obstacles laid by both nature and one's foes."),
-        new AbilityType("Decreased mission cost",
-            "Shrewd tongues, well-placed allies, and judicious use of arcane manupulation can ease both the strife, the journey, and the pocketbook."),
-    ],
+    HeroAbilityTypes: [],
 
     Requirements: function() {
         this.level = 0;
