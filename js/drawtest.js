@@ -522,7 +522,21 @@ var App = {
                 content += App.ModalBuild.startCloseText + "Mission Screen for mission " + id;
                 break;
             case App.ModalBuild.ModalTypes.HERO_SELECT:
-                content += App.ModalBuild.startCloseText + "Hero Selection Screen";
+                hero = App.Crew[id];
+                content += App.ModalBuild.startCloseText;
+                content += "<h3>Hero: " + hero.getName() + "</h3>";
+                content += "<h4>Special: " + hero.getSpecialization().getName() + "</h4>";
+                content += "<p>" + hero.getSpecialization().getDescription() + "</p>";
+                content += "<h4>Abilities</h4>";
+                abilities = hero.getAbilities();
+                for (i = 0; i < abilities.length; i++) {
+                    content += "<h5>" + App.HeroAbilities[abilities[i]].getName() + "</h5>";
+                    content += "<p>" + App.HeroAbilities[abilities[i]].getDescription() + "</p>";
+                }
+                content += "<p>Level: " + hero.getLevel() + "</p>";
+                content += "<p>Rank: " + hero.getRank() + "</p>";
+                content += "<p>Gear Level: " + hero.getGearLevel() + "</p>";
+                content += "<p>Current Mission: " + hero.getCurrentMission() + "</p>";
                 break;
             case App.ModalBuild.ModalTypes.MESSAGE:
                 content += App.ModalBuild.secondModalStart + 2 + ', ' + App.Modals + App.ModalBuild.secondModalEnd + App.ModalBuild.startCloseText + App.Messages[id];

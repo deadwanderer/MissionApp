@@ -125,10 +125,18 @@ function removeClass(el, className) {
     }
 }
 
-function getRowId(node) {
+function getMissionRowId(node) {
     console.log(node.nodeName);
     while (node.nodeName !== 'TR') {
         node = node.parentElement;
     }
     return node.id.split("am")[1];
+}
+
+function getHeroRowId(node) {
+    console.log(node.nodeName);
+    while (node.nodeName !== 'TR') {
+        node = node.parentElement;
+    }
+    return node.id.split("crew")[1];
 }
