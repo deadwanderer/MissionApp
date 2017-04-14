@@ -102,7 +102,8 @@ var App = {
     },
     Modals: 0,
     ModalBuild: {
-        startText: '<div class="vex-content"><form class="vex-dialog-form"><div class="vex-dialog-message" ',
+        normalstartText: '<div class="vex-content vex-normal"><form class="vex-dialog-form"><div class="vex-dialog-message" ',
+        widestartText: '<div class="vex-content vex-wide"><form class="vex-dialog-form"><div class="vex-dialog-message" ',
         secondModalStart: 'onclick="App.ShowModal(',
         secondModalEnd: ');"',
         startCloseText: '>', 
@@ -516,13 +517,15 @@ var App = {
     },
 
     ConstructModal: function(caller, id) {
-        content = App.ModalBuild.startText;
+        content = "";
         switch(caller) {
             case App.ModalBuild.ModalTypes.MISSION:
+                content += App.ModalBuild.widestartText;
                 content += App.ModalBuild.startCloseText + "Mission Screen for mission " + id;
                 break;
             case App.ModalBuild.ModalTypes.HERO_SELECT:
                 hero = App.Crew[id];
+                content += App.ModalBuild.widestartText;
                 content += App.ModalBuild.startCloseText;
                 content += "<h3>Hero: " + hero.getName() + "</h3>";
                 content += "<h4>Special: " + hero.getSpecialization().getName() + "</h4>";
@@ -539,6 +542,7 @@ var App = {
                 content += "<p>Current Mission: " + hero.getCurrentMission() + "</p>";
                 break;
             case App.ModalBuild.ModalTypes.MESSAGE:
+                content += App.ModalBuild.normalstartText;
                 content += App.ModalBuild.secondModalStart + 2 + ', ' + App.Modals + App.ModalBuild.secondModalEnd + App.ModalBuild.startCloseText + App.Messages[id];
                 break;
             default:
