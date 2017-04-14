@@ -54,6 +54,23 @@ var App = {
         Wood: 0
     },
 
+    NextMissionID: 1,
+    AvailableMissions: [],
+
+    Crew: [],
+    CrewToGenerateAtInit: 5,
+    LevelXP: [100, 110, 130, 150, 170, 190, 210, 240, 270, 300, 
+              330, 370, 410, 460, 510, 570, 630, 700, 770, 850, 
+              940, 1040, 1150, 1270, 1400, 1540, 1700, 1870, 2060, 2270, 
+              2500, 2750, 3030, 3340, 3680, 4050, 4460, 4910, 5410, 5960, 
+              6560, 7220, 7950, 8750, 9630, 10600, 11660, 12830, 14120, 15540, 
+              17100, 18810, 20700, 22770, 25050, 27560, 30320, 33360, 36700, 40370, 
+              44410, 48860, 53750, 59130, 65050, 71560, 78720, 86600, 95260, 104790, 
+              115270, 126800, 139480, 153430, 168780, 185660, 204230, 224660, 247130, 271850, 
+              299040, 328950, 361850, 398040, 437850, 481640, 529810, 582800, 641080, 705190, 
+              775710, 853290, 938620, 1032490, 1135740, 1249320, 1374260, 1511690, 1662860, 1829150],
+    MaxLevel: 100,
+
     LogLines: [],
     LogID: 0,
     LogFadeAfterTime: 10,
@@ -113,6 +130,8 @@ var App = {
         });
         App.InitArrays();
         App.SpawnCounter();
+        App.GenerateCrew();
+        console.log(App.LevelXP.length);
         window.requestAnimationFrame(App.Loop);        
     },
 
@@ -184,6 +203,25 @@ var App = {
             "Shrewd tongues, well-placed allies, and judicious use of arcane manupulation can ease both the strife, the journey, and the pocketbook."));
     },
 
+    GenerateCrew: function() {
+        for (i = 0; i < App.CrewToGenerateAtInit; i++) {
+            crewMember = new App.Crewmember();
+            crewMember.setName("Crewmember " + (i + 1));
+            spec = getRandomInt(0, App.Specializations.length);
+            crewMember.setSpecialization(spec);
+            ability = getRandomInt(0, App.HeroAbilities.length);
+            crewMember.addAbility(ability);
+            if (Math.random() > 0.8) {
+                secondAbility = getRandomInt(0, App.HeroAbilities.length);
+                while(secondAbility == ability) {
+                    secondAbility = getRandomInt(0, App.HeroAbilities.length);
+                } 
+                crewMember.addAbility(secondAbility);
+            }
+            App.Crew.push(crewMember);
+        }
+    },
+
     UpdateTime: function(timestamp) {
         if (App.Time.currTime === 0) App.Time.currTime  = App.Time.lastTime = timestamp;
         App.Time.currTime = timestamp;
@@ -223,11 +261,30 @@ var App = {
         App.DrawCounters();
         App.DrawResources();
         App.DrawTitle();
+        App.DrawCrew();
         App.DrawLog();
     },
 
     DrawTitle: function() {
         document.title = (App.Params.Focused ? "Focus" : "Blur") + ": " + App.Time.fps() + " fps";
+    },
+
+    DrawCrew: function() {
+        for (i = 0; i < App.Crew.length; i++) {
+            id = "crew" + i;
+            document.getElementById(id + "name").innerHTML = App.Crew[i].getName();
+            document.getElementById(id + "spec").innerHTML = App.Crew[i].getSpecialization().getName();
+            abilities = App.Crew[i].getAbilities();
+            abilityText = App.HeroAbilities[abilities[0]].getName();
+            for (x = 1; x < abilities.length; x++) {
+                abilityText += ", " + App.HeroAbilities[abilities[x]].getName();
+            }
+            document.getElementById(id + "abilities").innerHTML = abilityText;
+            document.getElementById(id + "level").innerHTML = App.Crew[i].getLevel();
+            document.getElementById(id + "rank").innerHTML = App.Crew[i].getRank();
+            document.getElementById(id + "gear").innerHTML = App.Crew[i].getGearLevel();
+            document.getElementById(id + "mission").innerHTML = App.Crew[i].getCurrentMission();            
+        }
     },
 
     DrawCounters: function() {
@@ -487,6 +544,10 @@ var App = {
         }
     },
 
+    GenerateMission: function() {
+        mission = new App.Mission(App.NextMissionID++);
+    },
+
     Mission: function(id) {
         this.defaultDuration = 5000;
         this.id = id;
@@ -495,7 +556,16 @@ var App = {
         this.missionType = -1;
         this.duration = -1;
         this.enemyList = [];
+        
+        // CrewList, ThreatList, and AbilityList store the integer ids
+        // of the crew, threats, and abilities, respectively. 
+        // Since these are set, we can just index into their instances.
+        // Enemies are dynamically generated per mission, though, so we store
+        // the whole enemy structure in the EnemyList array.
         this.crewList = [];
+        this.threatList = [];
+        this.abilityList = [];
+
         this.maxCrew = 1;
         this.requirements = null;
         this.rewards = null;
@@ -523,6 +593,9 @@ var App = {
                 return this.defaultDuration;
             } 
         }
+        this.setCrewNeeded = function(num) {
+            this.maxCrew = num;
+        }
         this.setEnemies = function(enemies) {
             if (Array.isArray(enemies)) {
                 this.enemyList = enemies;
@@ -533,9 +606,39 @@ var App = {
         }
         this.addEnemy = function(enemy) {
             this.enemyList.push(enemy);
+            for (i = 0; i < enemy.abilities.length; i++) {
+                this.threatList.push(enemy.abilities[i]);
+            }
         }
         this.getEnemies = function() {
             return this.enemyList;
+        }
+        this.getMissionThreats = function() {
+            return this.threatList;
+        }
+        this.addCrew = function(crewmember) {
+            if (this.crewList.length == this.maxCrew) {
+                console.log("Error in App.Mission.addCrew: mission crew limit reached, cannot add more crew members.")
+                return;
+            }
+            this.crewList.push(crewmember);
+            for (i = 0; i < App.Crew[crewmember].abilities.length; i++) {
+                this.abilityList.push(App.Crew[crewmember].abilities[i]);
+            }
+        }
+        this.removeCrew = function(crewmember) {
+            crewIndex = this.crewList.indexOf(crewmember);
+            if (crewIndex >= 0) {
+                this.crewList.splice(crewIndex, 1);
+            }
+            for (i = 0; i < App.Crew[crewmember].abilities.length; i++) {
+                abIndex = this.abilityList.indexOf(App.Crew[crewmember].abilities[i]);
+                if (abIndex >= 0) {
+                    this.abilityList.splice(abIndex, 1);
+                } else {
+                    console.log("Error in App.Mission.removeCrew: crewmember ability not present in mission ability list.");
+                }
+            }
         }
         this.setRequirements = function(reqs) {
             this.requirements = reqs;
@@ -547,11 +650,13 @@ var App = {
 
     Crewmember: function() {
         this.cName = "";
-        this.abilities = null;
-        this.specialization = null;
-        this.level = 0;
+        this.abilities = [];
+        this.specialization = -1;
+        this.xp = 0;
+        this.level = 1;
         this.gearLevel = 0;
         this.rank = 0;
+        this.missionID = -1;
         this.getName = function() {
             return this.cName;
         }
@@ -573,8 +678,35 @@ var App = {
                 this.abilities.push(other_abilities);
             }
         }
+        this.isOnMission = function() {
+            return this.missionID >= 0 ? true : false;
+        }
+        this.getCurrentMission = function() {
+            return this.missionID >= 0 ? this.missionID : "None";
+        }
+        this.setCurrentMission = function(id) {
+            if (this.missionID >= 0) {
+                console.log("ERROR: Crewmember " + this.cName + " already on mission " + this.missionID);
+                return;
+            }
+            this.missionID = id;
+        }
+        this.leaveMission = function() {
+            this.missionID = -1;
+        }
+        this.addAbility = function(ability) {
+            this.abilities.push(ability);
+        }
+        this.getAbilities = function() {
+            return this.abilities;
+        }
         this.getSpecialization = function() {
-            return this.specialization;
+            if (this.specialization >= 0) {
+                return App.Specializations[this.specialization];
+            } else {
+                console.log("ERROR: Crewmember " + this.cName + " specialization not set.");
+                return;
+            }
         }
         this.setSpecialization = function(spec) {
             this.specialization = spec;
@@ -584,12 +716,34 @@ var App = {
         }
         this.setLevel = function(lev) {
             if (lev < 1) lev = 1;
-            if (lev > 100) lev = 100;
+            if (lev > App.MaxLevel) lev = App.MaxLevel;
             this.level = lev;
         }
         this.levelUp = function() {
-            if (this.level == 100) return;
+            if (this.level == App.MaxLevel) return;
             this.level++;
+        }
+        this.addXP = function(xp) {
+            if (this.rank == App.Rank.length - 1) return;
+            this.xp += xp;
+            this.checkForLevelUp();
+        }
+        this.checkForLevelUp = function() {
+            if (this.level == App.MaxLevel) {
+                while (this.xp >= App.Rank[this.rank + 1].xpCost) {
+                    this.rankUp();
+                    this.xp -= App.Rank[this.rank].xpCost;
+                    if (this.xp < 0) {
+                        this.rank--;
+                        console.log("Error in App.Crewmember.checkForLevelUp: ranking up with insufficient XP.");
+                    }
+                }
+            } else {
+                while (this.xp >= App.LevelXP[this.level - 1]) {
+                    this.xp -= App.LevelXP[this.level-1];
+                    this.levelUp();
+                }
+            }
         }
         this.getGearLevel = function() {
             return this.gearLevel;
@@ -601,19 +755,19 @@ var App = {
             this.gearLevel += increase;
         }
         this.getRank = function() {
-            return App.Rank[this.rank];
+            return App.Rank[this.rank].name;
+        }
+        this.getRankLevel = function() {
+            return this.rank;
         }
         this.setRank = function(rank) {
             if (rank < 0) rank = 0;
             if (rank >= App.Rank.length) rank = App.Rank.length - 1;
             this.rank = rank;
         }
-        this.increaseRank = function(amount) {
-            increase = 1;
-            if (amount) increase = amount;
-            while (this.rank < App.Rank.length - 1 && increase > 0) {
+        this.rankUp = function() {
+            if (this.rank < App.Rank.length - 1) {
                 this.rank++;
-                this.increase--;
             }
         }
     },
@@ -621,8 +775,8 @@ var App = {
     Enemy: function() {
         this.eName = "";
         this.abilities = [];
-        this.level = 0;
-        this.rank = -1;
+        this.level = 1;
+        this.rank = 0;
         this.gearLevel = 0;
         this.setName = function(name) {
             this.eName = name;
@@ -654,19 +808,19 @@ var App = {
         }
         this.setLevel = function(level) {
             if (level < 0) level = 0;
-            if (level > 100) level = 100;
+            if (level > App.MaxLevel) level = App.MaxLevel;
             this.level = level;
         }
         this.gainLevel = function(amount) {
             levelsToGain = 1;
             if (amount) levelsToGain = amount;
-            while (this.level <= 100 && levelsToGain > 0) {
+            while (this.level <= App.MaxLevel && levelsToGain > 0) {
                 this.level++;
                 levelsToGain--;
             }
         }
         this.getRank = function() {
-            return App.Rank[this.rank];
+            return App.Rank[this.rank].name;
         }
         this.setRankLevel = function(rank) {
             if (rank < 0) rank = 0;
@@ -786,7 +940,7 @@ var App = {
         this.rankLevel = 0;
         this.setLevel = function(lev) {
             if (lev < 1) lev = 1;
-            if (lev > 100) lev = 100;
+            if (lev > App.MaxLevel) lev = App.MaxLevel;
             this.level = lev;
         }
         this.getLevel = function() {
@@ -807,7 +961,7 @@ var App = {
             return this.rankLevel;
         }
         this.getRank = function() {
-            return App.Rank[this.rankLevel];
+            return App.Rank[this.rankLevel].name;
         }
     },
 
@@ -861,10 +1015,11 @@ var App = {
     ],
 
     Rank: [
-        "Apprentice",
-        "Skilled",
-        "Master", 
-        "Champion"
+        {name: "none", xpCost: -1}, 
+        {name: "Apprentice", xpCost: 250000}, 
+        {name: "Skilled", xpCost: 500000},
+        {name: "Master", xpCost: 900000}, 
+        {name: "Champion", xpCost: 1500000}
     ],
 };
 

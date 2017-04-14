@@ -30,6 +30,12 @@ function zeroPad(num) {
     return zeroString+n;
 }
 
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 function lerpColor(c1, c2, endTime, currTime, opacity) {
     result = c1 + ((c2 - c1) * (currTime / endTime));
     if (opacity) {
