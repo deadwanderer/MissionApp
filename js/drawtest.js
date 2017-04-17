@@ -56,9 +56,13 @@ var App = {
 
     NextMissionID: 1,
     AvailableMissions: [],
+    MissionsToGenAtInit: 5,
 
     Crew: [],
     CrewToGenerateAtInit: 5,
+
+    EnemyID: 1,
+
     LevelXP: [100, 110, 130, 150, 170, 190, 210, 240, 270, 300, 
               330, 370, 410, 460, 510, 570, 630, 700, 770, 850, 
               940, 1040, 1150, 1270, 1400, 1540, 1700, 1870, 2060, 2270, 
@@ -129,10 +133,14 @@ var App = {
         $("#log").on("scroll", function() {
             App.RefreshLogDraw();
         });
+        App.MissionsToGenAtInit = 5;
+        App.AvailableMissions = [];
         App.InitArrays();
-        App.SpawnCounter();
+        //App.SpawnCounter();
         App.GenerateCrew();
-        console.log(App.LevelXP.length);
+        App.GenerateMissions();
+        console.log("Missions to generate: " + App.MissionsToGenAtInit);
+        console.log("Missions generated: " + App.AvailableMissions.length);
         window.requestAnimationFrame(App.Loop);        
     },
 
@@ -223,6 +231,23 @@ var App = {
         }
     },
 
+    GenerateMissions: function() {
+        console.log("Missions to generate: " + App.MissionsToGenAtInit);
+        for (index = 0; index < App.MissionsToGenAtInit; index++) {
+            missionId = index + 1;
+            console.log("Beginning generation of mission " + (missionId));
+            mission = App.GenerateMission(missionId);
+            App.AvailableMissions.push(mission);
+        }
+    },
+
+    GenerateEnemy: function() {
+        console.log("Generating enemy " + App.EnemyID);
+        enemy = new App.Enemy();
+        enemy.setName("Enemy " + App.EnemyID++);
+        return enemy;
+    },
+
     UpdateTime: function(timestamp) {
         if (App.Time.currTime === 0) App.Time.currTime  = App.Time.lastTime = timestamp;
         App.Time.currTime = timestamp;
@@ -262,6 +287,7 @@ var App = {
         App.DrawCounters();
         App.DrawResources();
         App.DrawTitle();
+        App.DrawAvailableMissions();
         App.DrawCrew();
         App.DrawLog();
     },
@@ -271,20 +297,51 @@ var App = {
     },
 
     DrawCrew: function() {
-        for (i = 0; i < App.Crew.length; i++) {
-            id = "crew" + i;
-            document.getElementById(id + "name").innerHTML = App.Crew[i].getName();
-            document.getElementById(id + "spec").innerHTML = App.Crew[i].getSpecialization().getName();
-            abilities = App.Crew[i].getAbilities();
+        for (ci = 0; ci < App.Crew.length; ci++) {
+            id = "crew" + ci;
+            document.getElementById(id + "name").innerHTML = App.Crew[ci].getName();
+            document.getElementById(id + "spec").innerHTML = App.Crew[ci].getSpecialization().getName();
+            abilities = App.Crew[ci].getAbilities();
             abilityText = App.HeroAbilities[abilities[0]].getName();
             for (x = 1; x < abilities.length; x++) {
                 abilityText += ", " + App.HeroAbilities[abilities[x]].getName();
             }
             document.getElementById(id + "abilities").innerHTML = abilityText;
-            document.getElementById(id + "level").innerHTML = App.Crew[i].getLevel();
-            document.getElementById(id + "rank").innerHTML = App.Crew[i].getRank();
-            document.getElementById(id + "gear").innerHTML = App.Crew[i].getGearLevel();
-            document.getElementById(id + "mission").innerHTML = App.Crew[i].getCurrentMission();            
+            document.getElementById(id + "level").innerHTML = App.Crew[ci].getLevel();
+            document.getElementById(id + "rank").innerHTML = App.Crew[ci].getRank();
+            document.getElementById(id + "gear").innerHTML = App.Crew[ci].getGearLevel();
+            document.getElementById(id + "mission").innerHTML = App.Crew[ci].getCurrentMission();            
+        }
+    },
+
+    DrawAvailableMissions: function() {
+        for (s = 0; s < App.AvailableMissions.length; s++) {            
+            mission = App.AvailableMissions[s];
+            id = "vm" + s;
+            document.getElementById(id+"name").innerHTML = mission.getName();
+            document.getElementById(id+"type").innerHTML = mission.getMissionType().getName();
+            document.getElementById(id+"length").innerHTML = timeFormat(mission.getDuration());            
+            thisEnemyList = mission.getEnemies();
+            enemies = thisEnemyList[0].getName();
+            for (x = 1; x < thisEnemyList.length; x++) {
+                enemies += ", " + thisEnemyList[x].getName();
+            }
+            document.getElementById(id+"enemies").innerHTML = enemies;
+            party = "";
+            partyList = mission.getCrew();
+            if (partyList.length == 0) party = "None";
+            else {
+                party = partyList[0].getName();
+                for (g = 1; g < partyList.length; g++) {
+                    party += ", " + partyList[g].getName();
+                }
+            }
+            document.getElementById(id+"party").innerHTML = party;
+            document.getElementById(id+"reqs").innerHTML = mission.getRequirements().getReqText();
+            document.getElementById(id+"cost").innerHTML = mission.getCost().getCostText();
+
+            document.getElementById(id+"rewards").innerHTML = mission.getRewardsText();
+            document.getElementById(id).style.visibility = 'visible';
         }
     },
 
@@ -562,8 +619,59 @@ var App = {
         }
     },
 
-    GenerateMission: function() {
-        mission = new App.Mission(App.NextMissionID++);
+    GenerateMission: function(id) {
+        console.log("Generating mission " + id);
+        mission = new App.Mission(id);
+        mission.setName("Mission " + id);
+        mission.setType(getRandomInt(0, App.MissionTypes.length));
+        mission.setDuration(getRandomInt(6000, 35000));
+        enemyCount = 1;
+        if (getRandomInt(0, 10) > 7) {
+            enemyCount = getRandomInt(2, 6);
+        }
+        console.log("Generating " + enemyCount + " enemies");
+        for (i = 0; i < enemyCount; i++) {
+            mission.addEnemy(App.GenerateEnemy());
+        }
+        heroCount = enemyCount;
+        if (enemyCount > 1 && getRandomInt(0, 10) > 7) heroCount--;
+        mission.setCrewNeeded(heroCount);
+        mission.setRequirements(App.GenerateMissionRequirements());
+        mission.setCost(App.GenerateCosts(heroCount));
+        for (i = 0; i < enemyCount; i++) {            
+            mission.addReward(App.GenerateReward());
+        }
+
+        return mission;
+    },
+
+    GenerateMissionRequirements: function() {
+        console.log("Generating mission requirements.");
+        reqs = new App.Requirements();
+        rnd = getRandomInt(0, 10);
+        if (rnd > 7) {
+            reqs.setGearLevel(getRandomInt(1, 51) * 10);
+        } else if (rnd > 5) {
+            reqs.setRankLevel(getRandomInt(1, App.Rank.length));
+        } else {
+            reqs.setLevel(getRandomInt(1, App.MaxLevel + 1));
+        }
+        return reqs;
+    },
+
+    GenerateCosts: function(count) {
+        console.log("Generating costs.");
+        costType = getRandomInt(0, App.ResourceType.length);
+        costAmount = getRandomInt(5, 35) * count;
+        return new App.Cost(costType, costAmount);
+    },
+
+    GenerateReward: function() {
+        console.log("Generating rewards.");
+        reward = new App.Reward();
+        reward.setRewardAmount(getRandomInt(App.Resources.resourceMin, App.Resources.resourceMax) * App.Resources.resourceMult);
+        reward.setRewardType(getRandomInt(0, App.ResourceType.length));
+        return reward;
     },
 
     Mission: function(id) {
@@ -586,7 +694,14 @@ var App = {
 
         this.maxCrew = 1;
         this.requirements = null;
-        this.rewards = null;
+        this.cost = null;
+        this.rewards = [];
+        this.setName = function(name) {
+            this.mName = name;
+        }
+        this.getName = function() {
+            return this.mName;
+        }
         this.setType = function(missionType) {
             this.missionType = missionType;
         }
@@ -624,9 +739,11 @@ var App = {
         }
         this.addEnemy = function(enemy) {
             this.enemyList.push(enemy);
+            /*
             for (i = 0; i < enemy.abilities.length; i++) {
                 this.threatList.push(enemy.abilities[i]);
             }
+            */
         }
         this.getEnemies = function() {
             return this.enemyList;
@@ -658,11 +775,40 @@ var App = {
                 }
             }
         }
+        this.getCrew = function() {
+            return this.crewList;
+        }
         this.setRequirements = function(reqs) {
             this.requirements = reqs;
         }
         this.getRequirements = function() {
             return this.requirements;
+        }
+        this.setCost = function(cost) {
+            this.cost = cost;
+        }
+        this.getCost = function() {
+            return this.cost;
+        }
+        this.addReward = function(reward) {
+            for (i = 0; i < this.rewards.length; i++) {
+                if (reward.rewardType == this.rewards[i].rewardType) {
+                    this.rewards[i].rewardAmount += reward.rewardAmount;
+                    return;
+                }
+            }
+            this.rewards.push(reward);
+        }
+        this.getRewards = function() {
+            return this.rewards;
+        }
+        this.getRewardsText = function() {
+            if (this.rewards.length == 0) return "None";
+            text = this.rewards[0].getRewardText();
+            for (i = 1; i < this.rewards.length; i++) {
+                text += "\n" + this.rewards[i].getRewardText();
+            }
+            return text;
         }
     },
 
@@ -981,33 +1127,69 @@ var App = {
         this.getRank = function() {
             return App.Rank[this.rankLevel].name;
         }
+        this.getReqText = function() {
+            if (this.gearLevel > 0) {
+                return "Gear level: " + this.gearLevel;
+            } 
+            else if (this.rankLevel > 0) {
+                return "Rank: " + this.getRank();
+            }
+            return "Level: " + this.level;
+        }
     },
 
-    Reward: function(name, desc, type, applyFunc, amount) {
-        this.rewardType = type;
-        this.rName = name;
-        this.desc = desc;
-        this.rewardAmount = 1;
-        if (amount === undefined) {
-
-        } else {
-            this.rewardAmount = amount;
+    Cost: function(type, amount) {
+        this.type = type;
+        this.amount = amount;
+        this.getCostText = function() {
+            return this.amount + " " + this.getType();
         }
-        this.applyFunc = applyFunc;
+        this.getType = function() {
+            return App.ResourceType[this.type];
+        }
+    },
+
+    Reward: function() {
+        this.rewardType = -1;
+        this.rName = "";
+        this.desc = "";
+        this.rewardAmount = 1;
+        this.applyFunc = null;
+        this.setName = function(name) {
+            this.rName = name;
+        }
         this.getName = function() {
             return this.rName;
+        }
+        this.setDescription = function(desc) {
+            this.desc = desc;
         }
         this.getDescription = function() {
             return this.desc;
         }
+        this.setRewardType = function(type) {
+            this.rewardType = type;
+        }
         this.getRewardType = function() {
             return App.RewardType[this.rewardType];
+        }
+        this.setRewardAmount = function(amt) {
+            this.rewardAmount = amt;
         }
         this.getRewardAmount = function() {
             return this.rewardAmount;
         }
+        this.setApplyFunc = function(func) {
+            this.applyFunc = func;
+        }
         this.apply = function(target) {
             this.applyFunc(target, this.rewardType, this.rewardAmount);
+        }
+        this.getRewardText = function() {
+            text = "";
+            if (this.rewardAmount > 1) text += this.rewardAmount + " ";
+            text += this.getRewardType();
+            return text;
         }
     },
 

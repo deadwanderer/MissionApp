@@ -84,21 +84,65 @@
                             <thead>
                                 <tr>                                    
                                     <th>Name</th>
+                                    <th>Type</th>
                                     <th>Length</th>
-                                    <th>Difficulty</th>
-                                    <th>Party Size</th>
+                                    <th>Enemies</th>
+                                    <th>Party</th>
+                                    <th>Requirements</th>
                                     <th>Cost</th>
                                     <th>Rewards</th>
                                 </tr>
                             </thead>
                             <tbody id="availableMissionList">
-                                <tr onclick="App.ShowModal(2, 0);">
-                                    <td>A Mission</td>
-                                    <td>4 Hours</td>
-                                    <td>7</td>
-                                    <td>3</td>
-                                    <td>25 Gold</td>
-                                    <td>100 Leather</td>
+                                <tr id="vm0" style="visibility: hidden">
+                                    <td id="vm0name"></td>
+                                    <td id="vm0type"></td>
+                                    <td id="vm0length"></td>
+                                    <td id="vm0enemies"></td>
+                                    <td id="vm0party"></td>
+                                    <td id="vm0reqs"></td>
+                                    <td id="vm0cost"></td>
+                                    <td id="vm0rewards"></td>
+                                </tr>
+                                <tr id="vm1" style="visibility: hidden">
+                                    <td id="vm1name"></td>
+                                    <td id="vm1type"></td>
+                                    <td id="vm1length"></td>
+                                    <td id="vm1enemies"></td>
+                                    <td id="vm1party"></td>
+                                    <td id="vm1reqs"></td>
+                                    <td id="vm1cost"></td>
+                                    <td id="vm1rewards"></td>
+                                </tr>
+                                <tr id="vm2" style="visibility: hidden">
+                                    <td id="vm2name"></td>
+                                    <td id="vm2type"></td>
+                                    <td id="vm2length"></td>
+                                    <td id="vm2enemies"></td>
+                                    <td id="vm2party"></td>
+                                    <td id="vm2reqs"></td>
+                                    <td id="vm2cost"></td>
+                                    <td id="vm2rewards"></td>
+                                </tr>
+                                <tr id="vm3" style="visibility: hidden">
+                                    <td id="vm3name"></td>
+                                    <td id="vm3type"></td>
+                                    <td id="vm3length"></td>
+                                    <td id="vm3enemies"></td>
+                                    <td id="vm3party"></td>
+                                    <td id="vm3reqs"></td>
+                                    <td id="vm3cost"></td>
+                                    <td id="vm3rewards"></td>
+                                </tr>
+                                <tr id="vm4" style="visibility: hidden">
+                                    <td id="vm4name"></td>
+                                    <td id="vm4type"></td>
+                                    <td id="vm4length"></td>
+                                    <td id="vm4enemies"></td>
+                                    <td id="vm4party"></td>
+                                    <td id="vm4reqs"></td>
+                                    <td id="vm4cost"></td>
+                                    <td id="vm4rewards"></td>
                                 </tr>
                             </tbody>
                         </table>
