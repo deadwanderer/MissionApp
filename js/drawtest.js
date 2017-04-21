@@ -791,9 +791,9 @@ var App = {
             return this.cost;
         }
         this.addReward = function(reward) {
-            for (i = 0; i < this.rewards.length; i++) {
-                if (reward.rewardType == this.rewards[i].rewardType) {
-                    this.rewards[i].rewardAmount += reward.rewardAmount;
+            for (hi = 0; hi < this.rewards.length; hi++) {
+                if (reward.rewardType == this.rewards[hi].rewardType) {
+                    this.rewards[hi].rewardAmount += reward.rewardAmount;
                     return;
                 }
             }
@@ -806,7 +806,7 @@ var App = {
             if (this.rewards.length == 0) return "None";
             text = this.rewards[0].getRewardText();
             for (i = 1; i < this.rewards.length; i++) {
-                text += "\n" + this.rewards[i].getRewardText();
+                text += ", " + this.rewards[i].getRewardText();
             }
             return text;
         }

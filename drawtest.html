@@ -45,27 +45,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h4>Inventory</h4>
-                        <table class="table">
-                            <thead class="thead-inverse">
-                                <tr>
-                                    <th>Slot</th>
-                                    <th>Name</th>
-                                    <th>Item Level</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Head</td>
-                                    <td>Item of Greatness</td>
-                                    <td>830</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
                     <div class="col-sm-6">
                         <h4>Activity Log</h4>
                         <div id="log">
@@ -394,7 +373,14 @@
     for (i = 0; i < 12; i++) {
         $(document).on('click', '#am'+i, function(e) {
             if (e.target) {
-                App.ShowModal(App.ModalBuild.ModalTypes.MISSION, getMissionRowId(e.target));
+                App.ShowModal(App.ModalBuild.ModalTypes.MISSION, getActiveMissionRowId(e.target));
+            }
+        })
+    }
+    for (i = 0; i < 5; i++) {
+        $(document).on('click', '#vm'+i, function(e) {
+            if (e.target) {
+                App.ShowModal(App.ModalBuild.ModalTypes.MISSION, getAvailableMissionRowId(e.target));
             }
         })
     }
