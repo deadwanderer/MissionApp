@@ -1,14 +1,6 @@
 BattleClock - Controls flow of time during battle.
 
-// BattleClock uses deltaTime to simulate battle time passing. 
-// Multiply deltaTime by (2? 5? some multiple), then add it to everyone's elapsedTime. 
-// If unit's elapsedTime > unit's attackTime, subtract attackTime from elapsedTime, and add unit to readyToAct queue (priority queue? Probably. The larger the elapsedTime of the queued units, the "sooner" they would have acted, so they should go first. If theres's a tie, the unit with higher haste goes first. If still a tie, player goes before enemy. If still a tie, first queued goes first). 
-// Only deal with deltaTime if readyToAct queue is empty? 
-// What if Effect would have ticked within deltaTime, between two units in queue? 
-// Perhaps a ScheduledUpdate interface for the priority queue, which can handle both units and effects? 
-// Keeping deltaTime mult lower will help alleviate the chances of this happening (hopefully?), but will also slow the overall flow of battle time, although this shouldn't be a big problem, if attack times stay low. 
-
-Wait, better idea (? maybe?). If (and only if), readyToAct queue is empty (no units scheduled to act, and no Effects scheduled to tick), sort all ScheduledUpdate entities by attackTime - elapsedTime, find the lowest (least time remaining before action taken), schedule them to act (resolving multiple actors as above), and subtract the elapsed time (equal to the time required for the scheduled actor to get from elapsedTime to attackTime) from all actors. 
+If (and only if), readyToAct queue is empty (no units scheduled to act, and no Effects scheduled to tick), sort all ScheduledUpdate entities by attackTime - elapsedTime, find the lowest (least time remaining before action taken), schedule them to act (resolving multiple actors as above), and subtract the elapsed time (equal to the time required for the scheduled actor to get from elapsedTime to attackTime) from all actors. 
 So:
 
 minTime = MAX_TIME
@@ -65,8 +57,15 @@ Finesse  (agility): Dagger/bow/gun damage   / dodge
 Faith     (spirit): Resource recovery       / haste
 Vitality (stamina): Health                  / resistance
 Vigor     (energy): Resource capacity       / crit damage
-Alacrity   (haste): 
-Intensity   (crit): 
+
+Secondary stats:
+
+Alacrity      (haste): Attack speed, HOT/DOT tick speed
+Intensity  (crit dmg): Critical hit damage multiplier
+Serendipity (crit ch): Critical hit chance
+Deflection    (parry): Chance to parry (deflect) an attack that hits, reducing or nullifying damage
+Avoidance     (dodge): Chance to avoid an attack, preventing it from hitting
+Defense  (resistance): Reduces damage taken from <type>-based attacks
 
 Damage types:
     Physical

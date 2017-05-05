@@ -44,7 +44,9 @@ Mission Rewards:
         Leather,
         Cloth,
         Steel,
-        Wood
+        Wood,
+        Stone, 
+        Food
 
     // These rewards are one apiece, and add to inventory or crew
     Equipment:
