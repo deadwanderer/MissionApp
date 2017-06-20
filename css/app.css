@@ -39,3 +39,18 @@
     color: #ddd;
     font-size: 18px;
 }
+.kill {
+    color: #e22233;
+}
+.collect {
+    color: gold;
+}
+.defend {
+    color: blueviolet;
+}
+.scout {
+    color: mediumseagreen;
+}
+.ward {
+    color: skyblue;
+}

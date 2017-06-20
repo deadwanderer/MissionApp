@@ -112,21 +112,27 @@ function base64Encode(input) {
 
 function addClass(el, className) {
     if (el.classList)
-	el.classList.add(className);
+	    el.classList.add(className);
     else if (!hasClass(el, className)) el.className += " " + className;
 }
 
 function removeClass(el, className) {
     if (el.classList)
-	el.classList.remove(className);
+	    el.classList.remove(className);
     else if (hasClass(el, className)) {
-	var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
-	el.className = el.className.replace(reg, ' ');
+	    var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+	    el.className = el.className.replace(reg, ' ');
     }
 }
 
+function hasClass(el, className) {
+  if (el.classList)
+    return el.classList.contains(className)
+  else
+    return !!el.className.match(new RegExp('(\\s|^)' + className + '(\\s|$)'))
+}
+
 function getActiveMissionRowId(node) {
-    console.log(node.nodeName);
     while (node.nodeName !== 'TR') {
         node = node.parentElement;
     }
@@ -134,7 +140,6 @@ function getActiveMissionRowId(node) {
 }
 
 function getAvailableMissionRowId(node) {
-    console.log(node.nodeName);
     while (node.nodeName !== 'TR') {
         node = node.parentElement;
     }
@@ -142,7 +147,6 @@ function getAvailableMissionRowId(node) {
 }
 
 function getHeroRowId(node) {
-    console.log(node.nodeName);
     while (node.nodeName !== 'TR') {
         node = node.parentElement;
     }

@@ -56,12 +56,14 @@ var App = {
 
     NextMissionID: 1,
     AvailableMissions: [],
+    ActiveMissions: [],
     MissionsToGenAtInit: 5,
 
     Crew: [],
     CrewToGenerateAtInit: 5,
 
     EnemyID: 1,
+    Enemies: [], 
 
     LevelXP: [100, 110, 130, 150, 170, 190, 210, 240, 270, 300, 
               330, 370, 410, 460, 510, 570, 630, 700, 770, 850, 
@@ -277,14 +279,10 @@ var App = {
     Logic: function() {
         App.UpdateTimers();
         App.CullLog();
-        if (App.Time.elapsedSinceSpawn > App.Time.spawnTime) {
-            App.SpawnCounter();
-            App.Time.elapsedSinceSpawn = 0;
-        }
     },
 
     Draw: function() {
-        App.DrawCounters();
+        App.DrawActiveMissions();
         App.DrawResources();
         App.DrawTitle();
         App.DrawAvailableMissions();
@@ -319,14 +317,9 @@ var App = {
             mission = App.AvailableMissions[s];
             id = "vm" + s;
             document.getElementById(id+"name").innerHTML = mission.getName();
-            document.getElementById(id+"type").innerHTML = mission.getMissionType().getName();
-            document.getElementById(id+"length").innerHTML = timeFormat(mission.getDuration());            
-            thisEnemyList = mission.getEnemies();
-            enemies = thisEnemyList[0].getName();
-            for (x = 1; x < thisEnemyList.length; x++) {
-                enemies += ", " + thisEnemyList[x].getName();
-            }
-            document.getElementById(id+"enemies").innerHTML = enemies;
+            addClass(document.getElementById(id+"name"), mission.getMissionType().getName().toLowerCase())
+            document.getElementById(id+"length").innerHTML = timeFormat(mission.getDuration());
+            document.getElementById(id+"enemies").innerHTML = mission.getEnemies().length;
             party = "";
             partyList = mission.getCrew();
             if (partyList.length == 0) party = "None";
@@ -345,49 +338,49 @@ var App = {
         }
     },
 
-    DrawCounters: function() {
+    DrawActiveMissions: function() {
        if (App.fullDraw) {
             text = "";
-            for (i = 0; i < App.Counters.length; i++) {            
-                counter = App.Counters[i];
+            for (i = 0; i < App.ActiveMissions.length; i++) {            
+                mission = App.ActiveMissions[i];
                 text += "<tr><td>";
-                text += counter.cName;
+                text += mission.cName;
                 text += "</td><td>";
-                text += timeFormat(counter.runTime);
+                text += timeFormat(mission.runTime);
                 text += "</td><td>";
-                if (counter.elapsedTime <= counter.runTime) {
-                    width = (counter.elapsedTime / counter.runTime) * 100;
+                if (mission.elapsedTime <= mission.runTime) {
+                    width = (mission.elapsedTime / mission.runTime) * 100;
                     textWidth = Math.round(width);
                     text += "<div class='myProgress'><div class='myBar' style='width:" + width + "%;'></div><span class='barText'>"
                     + (textWidth > 100 ? 100 : textWidth) + "%</span></div></td></tr>";
                 }
-                else if (counter.flashTime <= App.FlashTime) {
-                    heightAdd = Math.round((counter.flashTime / App.FlashTime) * App.FlashHeight);
+                else if (mission.flashTime <= App.FlashTime) {
+                    heightAdd = Math.round((mission.flashTime / App.FlashTime) * App.FlashHeight);
                     width = 250 + heightAdd;
                     height = 25 + heightAdd;
                     margin = heightAdd / 2;
                     text += "<div class='myProgress flashProgress' style='height:" + height + "px; width:" 
                     + width + "px; margin:-" + margin + "px -" + margin 
                     + "px;'><div class='myBar flashBar' style='width:100%;background-color:rgb(" 
-                    + lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false) + ","
-                    + lerpColor(205, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false) + ","
-                    + lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false) + ");opacity:"
-                    + lerpColor(1, 0, App.FlashTime * App.FlashTime, counter.flashTime * counter.flashTime, true) + ";'></div></div></td></tr>";
+                    + lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(mission.flashTime), false) + ","
+                    + lerpColor(205, 255, Math.sqrt(App.FlashTime), Math.sqrt(mission.flashTime), false) + ","
+                    + lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(mission.flashTime), false) + ");opacity:"
+                    + lerpColor(1, 0, App.FlashTime * App.FlashTime, mission.flashTime * mission.flashTime, true) + ";'></div></div></td></tr>";
                 }
             }
             document.getElementById("activeMissionList").innerHTML = text;
         }
         else {
             App.ClearCounterDivs();
-            for (i = 0; i < App.Counters.length; i++) {
-                counter = App.Counters[i];
+            for (i = 0; i < App.ActiveMissions.length; i++) {
+                mission = App.ActiveMissions[i];
                 id = "am" + i;
                 row = document.getElementById(id);
                 row.style.visibility = 'visible';
-                document.getElementById("am" + i + "Name").innerHTML = counter.cName;
-                document.getElementById("am" + i + "Length").innerHTML = timeFormat(counter.runTime);
-                if (counter.elapsedTime <= counter.runTime) {
-                    width = (counter.elapsedTime / counter.runTime) * 100;
+                document.getElementById("am" + i + "Name").innerHTML = mission.cName;
+                document.getElementById("am" + i + "Length").innerHTML = timeFormat(mission.runTime);
+                if (mission.elapsedTime <= mission.runTime) {
+                    width = (mission.elapsedTime / mission.runTime) * 100;
                     textWidth = Math.round(width);
                     progDiv = document.getElementById("am"+i+"ProgDiv");
                     progDiv.style.height="25px";
@@ -399,8 +392,8 @@ var App = {
                     barDiv.style.opacity = '1';
                     document.getElementById("am" + i + "BarSpan").innerHTML = textWidth + "%";		    
                 }
-                else if (counter.flashTime <= App.FlashTime) {
-                    heightAdd = Math.round((counter.flashTime / App.FlashTime) * App.FlashHeight);
+                else if (mission.flashTime <= App.FlashTime) {
+                    heightAdd = Math.round((mission.flashTime / App.FlashTime) * App.FlashHeight);
                     width = 250 + heightAdd;
                     height = 25 + heightAdd;
                     margin = heightAdd / 2;
@@ -412,10 +405,10 @@ var App = {
                     progElem.style.width = width+"px";
                     progElem.style.margin = "-" + margin + "px -" + margin + "px";
                     barElem.style.width = "100%";
-                    red = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false);
-                    green = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false);
-                    blue = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(counter.flashTime), false);
-                    opac = lerpColor(1, 0, App.FlashTime * App.FlashTime, counter.flashTime * counter.flashTime, true);
+                    red = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(mission.flashTime), false);
+                    green = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(mission.flashTime), false);
+                    blue = lerpColor(50, 255, Math.sqrt(App.FlashTime), Math.sqrt(mission.flashTime), false);
+                    opac = lerpColor(1, 0, App.FlashTime * App.FlashTime, mission.flashTime * mission.flashTime, true);
                     barElem.style.backgroundColor = "rgb("+red+","+green+","+blue+")";
                     barElem.style.opacity = opac;
                 }
@@ -555,7 +548,7 @@ var App = {
         log.insertBefore(para, log.childNodes[0]);
     },
 
-    ShowModal: function(type, id) {
+    ShowModal: function(type, id, available) {
         element = document.createElement('div');
         element.id='modal';
         element.className ="vex vex-theme-os";        
@@ -566,19 +559,35 @@ var App = {
         if (App.Modals > App.Messages.length) {
             return;
         }
-        content = App.ConstructModal(type, id);
+        content = App.ConstructModal(type, id, available);
         html += content;
         element.innerHTML = html;
         document.querySelector('body').appendChild(element);
         $(document.body).addClass('vex-open');
     },
 
-    ConstructModal: function(caller, id) {
+    ConstructModal: function(caller, id, available) {
         content = "";
         switch(caller) {
             case App.ModalBuild.ModalTypes.MISSION:
+                if(available) {
+                    mission = App.AvailableMissions[id];
+                } else {
+                    mission = App.ActiveMissions[id];
+                }
                 content += App.ModalBuild.widestartText;
-                content += App.ModalBuild.startCloseText + "Mission Screen for mission " + id;
+                content += App.ModalBuild.startCloseText;
+                content += "<h3>Mission: " + mission.getName() + "</h3>";
+                content += "<h4>Type: " + mission.getMissionType().getName() + "</h4>";
+                content += "<p>" + mission.getMissionType().getDescription() + "</p>";
+                content += "<h4>Enemies</h4>";
+                enemies = mission.getEnemies();
+                for (i = 0; i < enemies.length; i++) {
+                    content += "<h5>" + enemies[i].getName() + "</h5>";
+                }
+                content += "<p>Reqs: " + mission.getRequirements().getReqText() + "</p>";
+                content += "<p>Cost: " + mission.getCost().getCostText() + "</p>";
+                content += "<p>Rewards: " + mission.getRewardsText() + "</p>";
                 break;
             case App.ModalBuild.ModalTypes.HERO_SELECT:
                 hero = App.Crew[id];

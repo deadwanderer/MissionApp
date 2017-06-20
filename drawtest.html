@@ -63,7 +63,6 @@
                             <thead>
                                 <tr>                                    
                                     <th>Name</th>
-                                    <th>Type</th>
                                     <th>Length</th>
                                     <th>Enemies</th>
                                     <th>Party</th>
@@ -75,7 +74,6 @@
                             <tbody id="availableMissionList">
                                 <tr id="vm0" style="visibility: hidden">
                                     <td id="vm0name"></td>
-                                    <td id="vm0type"></td>
                                     <td id="vm0length"></td>
                                     <td id="vm0enemies"></td>
                                     <td id="vm0party"></td>
@@ -85,7 +83,6 @@
                                 </tr>
                                 <tr id="vm1" style="visibility: hidden">
                                     <td id="vm1name"></td>
-                                    <td id="vm1type"></td>
                                     <td id="vm1length"></td>
                                     <td id="vm1enemies"></td>
                                     <td id="vm1party"></td>
@@ -95,7 +92,6 @@
                                 </tr>
                                 <tr id="vm2" style="visibility: hidden">
                                     <td id="vm2name"></td>
-                                    <td id="vm2type"></td>
                                     <td id="vm2length"></td>
                                     <td id="vm2enemies"></td>
                                     <td id="vm2party"></td>
@@ -105,7 +101,6 @@
                                 </tr>
                                 <tr id="vm3" style="visibility: hidden">
                                     <td id="vm3name"></td>
-                                    <td id="vm3type"></td>
                                     <td id="vm3length"></td>
                                     <td id="vm3enemies"></td>
                                     <td id="vm3party"></td>
@@ -115,7 +110,6 @@
                                 </tr>
                                 <tr id="vm4" style="visibility: hidden">
                                     <td id="vm4name"></td>
-                                    <td id="vm4type"></td>
                                     <td id="vm4length"></td>
                                     <td id="vm4enemies"></td>
                                     <td id="vm4party"></td>
@@ -373,21 +367,21 @@
     for (i = 0; i < 12; i++) {
         $(document).on('click', '#am'+i, function(e) {
             if (e.target) {
-                App.ShowModal(App.ModalBuild.ModalTypes.MISSION, getActiveMissionRowId(e.target));
+                App.ShowModal(App.ModalBuild.ModalTypes.MISSION, getActiveMissionRowId(e.target), false);
             }
         })
     }
     for (i = 0; i < 5; i++) {
         $(document).on('click', '#vm'+i, function(e) {
             if (e.target) {
-                App.ShowModal(App.ModalBuild.ModalTypes.MISSION, getAvailableMissionRowId(e.target));
+                App.ShowModal(App.ModalBuild.ModalTypes.MISSION, getAvailableMissionRowId(e.target), true);
             }
         })
     }
     for (i = 0; i < 5; i++) {
         $(document).on('click', "#crew"+i, function(e) {
             if (e.target) {
-                App.ShowModal(App.ModalBuild.ModalTypes.HERO_SELECT, getHeroRowId(e.target));
+                App.ShowModal(App.ModalBuild.ModalTypes.HERO_SELECT, getHeroRowId(e.target), false);
             }
         })
     }
