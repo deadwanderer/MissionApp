@@ -54,3 +54,10 @@
 .ward {
     color: skyblue;
 }
+.portrait {
+    border: 2px solid black;
+    box-shadow: 5px 5px 2px #222222;
+    border-radius: 5px;
+    width: 64px;
+    height: 64px;
+}
