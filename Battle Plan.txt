@@ -123,3 +123,5 @@ Should the attacker calculate damage when doing an attack, then submit AttemptAt
     }), and the target handles whether it hits or not (rolls against attacker chanceToHit, as well as rolling against target dodge/parry chance), and handles any damage mitigation (30% physical reduction, 5% magic vulnerability, etc.) and effects applied, and sends back to the game the actual damage done?
 
     Or would it just be better for the game to handle the whole thing with a ResolveAttack(attacker, target) call that handles it all? Is there really any difference?
+
+    What about AOE attacks? Need to roll attack from attacker for each target, then each target individually calcs mitigation.
