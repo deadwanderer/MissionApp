@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Test layout</title>
+    <script type="text/javascript" src="knockout.js"></script>
+    <script type="text/javascript" src="test.js"></script>
+    <link rel="stylesheet" type="text/css" href="test.css">
+</head>
+
+<body>
+    <table style="min-width: 1250px">
+        <tr>
+            <td colspan="2">
+                <table data-bind="template: { name: 'crew-group' }"></table>
+            </td>
+            <td style="width: 75px"></td>
+            <td colspan="2" style="float:right">
+                <table data-bind="template: { name: 'enemy-group' }"></table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Individual enemy unit template -->
+    <script type="text/html" id="enemy-each">
+        <tr>
+            <td data-bind="text: name()"></td>
+        </tr>
+        <tr>
+            <td><img src="enemy.png"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class='myProgress'><div class='myBar' data-bind="style: { width: healthPercentage }"></div><span class='barText'></span></div>
+            </td>
+        </tr>
+    </script>
+
+    <!-- Individual crew unit template -->
+    <script type="text/html" id="crew-each">
+        <tr>
+            <td data-bind="text: name"></td>
+        </tr>
+        <tr>
+            <td><img src="crew.png"></td>
+        </tr>
+        <tr>
+            <td>
+                <div class='myProgress'><div class='myBar' data-bind="style: { width: healthPercentage }"></div><span class='barText'></span></div>
+            </td>
+        </tr>
+    </script>
+
+    <!-- Enemy group template -->
+    <script type="text/html" id="enemy-group">
+        <tr>
+            <td>
+                <table data-bind="template: { name: 'enemy-each', foreach: enemies, as: 'enemy' }"></table>
+            </td>
+        </tr>
+    </script>
+
+    <!-- Crew group template -->
+    <script type="text/html" id="crew-group">
+        <tr>
+            <td>
+                <table data-bind="template: { name: 'crew-each', foreach: crew, as: 'member' }"></table>
+            </td>
+        </tr>
+    </script>
+
+    <script type="text/javascript">
+        ko.applyBindings(MyBattleModel());
+    </script>
+</body>
+
+</html>
