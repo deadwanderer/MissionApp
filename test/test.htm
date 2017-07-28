@@ -24,13 +24,13 @@
 
     <!-- Individual enemy unit template -->
     <script type="text/html" id="enemy-each">
-        <tr>
-            <td data-bind="text: name()"></td>
+        <tr data-bind="visible: isVisible">
+            <td data-bind="text: name"></td>
         </tr>
-        <tr>
+        <tr data-bind="visible: isVisible">
             <td><img src="enemy.png"></td>
         </tr>
-        <tr>
+        <tr data-bind="visible: isVisible">
             <td>
                 <div class='myProgress'><div class='myBar' data-bind="style: { width: healthPercentage }"></div><span class='barText'></span></div>
             </td>
@@ -39,13 +39,14 @@
 
     <!-- Individual crew unit template -->
     <script type="text/html" id="crew-each">
-        <tr>
+
+        <tr data-bind="visible: isVisible">
             <td data-bind="text: name"></td>
         </tr>
-        <tr>
+        <tr data-bind="visible: isVisible">
             <td><img src="crew.png"></td>
         </tr>
-        <tr>
+        <tr data-bind="visible: isVisible">
             <td>
                 <div class='myProgress'><div class='myBar' data-bind="style: { width: healthPercentage }"></div><span class='barText'></span></div>
             </td>
@@ -69,10 +70,11 @@
             </td>
         </tr>
     </script>
-
-    <script type="text/javascript">
-        ko.applyBindings(MyBattleModel());
-    </script>
+    <script>
+        var game = new MyBattleModel;
+        ko.applyBindings(game);
+        game.init();
+        </script>
 </body>
 
 </html>
