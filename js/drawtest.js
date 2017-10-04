@@ -113,7 +113,9 @@ var App = {
         secondModalStart: 'onclick="App.ShowModal(',
         secondModalEnd: ');"',
         startCloseText: '>', 
-        endText: '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="App.HideModal();">OK</button></div></form></div>',
+        endTextFirst: '</div><div class="vex-dialog-input"></div><div class="vex-dialog-buttons"><button class="vex-dialog-button-primary vex-dialog-button vex-first" type="button" onclick="',
+        hide: 'App.HideModal();',
+        endTextLast: '">OK</button></div></form></div>',
         ModalTypes: {
             MISSION: 0,
             HERO_SELECT: 1,
@@ -587,6 +589,7 @@ var App = {
 
     ConstructModal: function(caller, id, available) {
         content = "";
+        acceptFunc = "";
         switch(caller) {
             case App.ModalBuild.ModalTypes.MISSION:
                 if(available) {
@@ -609,7 +612,7 @@ var App = {
                 content += "<h4>Heroes</h4>";
                 content += "<div class='heroSelect'>";
                 for (x = 0; x < mission.getCrewNeeded(); x++) {
-                    content += "<a href='#'><img src='img/nochar.png' class='portrait' /></a>";
+                    content += "<a href='#' onclick='App.ShowModal(App.ModalBuild.ModalTypes.HERO_SELECT, "+x+", false);'><img src='img/nochar.png' class='portrait' /></a>";
                 }
                 content += "</div>";
                 content += "<p>Reqs: " + mission.getRequirements().getReqText() + "</p>";
@@ -649,7 +652,17 @@ var App = {
                 content += "<p>Current Mission: " + hero.getCurrentMission() + "</p>";
                 break;
             case App.ModalBuild.ModalTypes.HERO_SELECT:
+                heroes = App.GetAvailableCrew();
+                content += App.ModalBuild.normalstartText;
+                content += App.ModalBuild.startCloseText;
+                for (i = 0; i < heroes.length; i++) {
+                    hero = App.Crew[heroes[i]];
+                    content += "<div class='heroSelect'>";
+                    content += ""
 
+                    content += "</div>";
+                }
+                acceptFunc = "App."
                 break;
             case App.ModalBuild.ModalTypes.MESSAGE:
                 content += App.ModalBuild.normalstartText;
@@ -658,7 +671,13 @@ var App = {
             default:
                 return "ModalType " + caller + " not found.";                
         }
-        content += App.ModalBuild.endText;
+        content += App.ModalBuild.endTextLast;
+        if (acceptFunc != "") {
+            content += acceptFunc;
+        } else {
+            content += App.ModalBuild.hide;
+        }
+        content += App.ModalBuild.endTextLast;
         return content;
     },
 
