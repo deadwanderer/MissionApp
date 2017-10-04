@@ -60,8 +60,18 @@
     border-radius: 5px;
     width: 64px;
     height: 64px;
+    margin: 5px;
 }
-
+.heroSelect {
+    border: 3px solid green;
+    padding: 3px;
+    margin: 5px;
+}
+.enemySelect {
+    border: 3px solid crimson;
+    padding: 3px;
+    margin: 5px;
+}
 .none {
     color: white;
 }

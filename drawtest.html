@@ -383,7 +383,7 @@
     for (i = 0; i < 5; i++) {
         $(document).on('click', "#crew"+i, function(e) {
             if (e.target) {
-                App.ShowModal(App.ModalBuild.ModalTypes.HERO_SELECT, getHeroRowId(e.target), false);
+                App.ShowModal(App.ModalBuild.ModalTypes.HERO_SHOW, getHeroRowId(e.target), false);
             }
         })
     }

@@ -118,6 +118,8 @@ var App = {
             MISSION: 0,
             HERO_SELECT: 1,
             MESSAGE: 2,
+            ENEMY_SHOW: 3,
+            HERO_SHOW: 4,
         }
     },
 
@@ -250,6 +252,18 @@ var App = {
         console.log("Generating enemy " + App.EnemyID);
         enemy = new App.Enemy();
         enemy.setName("Enemy " + App.EnemyID++);
+        ability = getRandomInt(0, App.EnemyAbilities.length);
+        enemy.addAbility(ability);
+        if (Math.random() > 0.8) {
+            secondAbility = getRandomInt(0, App.EnemyAbilities.length);
+            while(secondAbility == ability) {
+                secondAbility = getRandomInt(0, App.EnemyAbilities.length);
+            } 
+            enemy.addAbility(secondAbility);
+        }
+        enemy.setLevel(Math.floor(Math.random() * 100) + 1);
+        enemy.setRankLevel(Math.floor(Math.random() * App.Rank.length));
+        
         return enemy;
     },
 
@@ -493,7 +507,7 @@ var App = {
         App.Draw();
         window.requestAnimationFrame(App.Loop);
     },
-
+/*
     Counter: function(name, time, resource, func) {
         this.cName = name;
         this.runTime = time;
@@ -541,7 +555,7 @@ var App = {
         App.Counters.push(counter);
         App.Log("Spawned new Counter " + name + ", lasting " + timeFormat(time) + ", bringing back " + resAmt + " " + resName+ ".");
     },
-
+*/
     Log: function(text) {
         id = "Log" + App.LogID++;
         index = App.LogLines.push({id: id, time: App.LogFadeAfterTime * App.Time.seconds, opacity: 1.0, fadeTime: App.LogFadeTime, fading: false, faded: false}) - 1;
@@ -587,14 +601,36 @@ var App = {
                 content += "<p>" + mission.getMissionType().getDescription() + "</p>";
                 content += "<h4>Enemies</h4>";
                 enemies = mission.getEnemies();
+                content += "<div class='enemySelect'>";
                 for (i = 0; i < enemies.length; i++) {
-                    content += "<h5>" + enemies[i].getName() + "</h5>";
+                    content += "<a href='#' onclick='App.ShowModal(App.ModalBuild.ModalTypes.ENEMY_SHOW, "+App.Enemies[enemies[i]].getID()+", false);'><img src='img/enemy.png' class='portrait' /></a>";
                 }
+                content += "</div>";
+                content += "<h4>Heroes</h4>";
+                content += "<div class='heroSelect'>";
+                for (x = 0; x < mission.getCrewNeeded(); x++) {
+                    content += "<a href='#'><img src='img/nochar.png' class='portrait' /></a>";
+                }
+                content += "</div>";
                 content += "<p>Reqs: " + mission.getRequirements().getReqText() + "</p>";
                 content += "<p>Cost: " + mission.getCost().getCostText() + "</p>";
                 content += "<p>Rewards: " + mission.getRewardsText() + "</p>";
                 break;
-            case App.ModalBuild.ModalTypes.HERO_SELECT:
+            case App.ModalBuild.ModalTypes.ENEMY_SHOW:
+                enemy = App.Enemies[id];
+                content += App.ModalBuild.widestartText;
+                content += App.ModalBuild.startCloseText;
+                content += "<h3>Enemy: " + enemy.getName() + "</h3>";
+                content += "<h4>Abilities</h4>";
+                abilities = enemy.getAbilities();
+                for (i = 0; i < abilities.length; i++) {
+                    content += "<h5>" + App.EnemyAbilities[abilities[i]].getName() + " (" + App.EnemyAbilities[abilities[i]].getAbilityType().getName() + ")</h5>";
+                    content += "<p>" + App.EnemyAbilities[abilities[i]].getDescription() + "</p>";
+                }
+                content += "<p>Level: " + enemy.getLevel() + "</p>";
+                content += "<p>Rank: " + enemy.getRank() + "</p>";
+                break;
+            case App.ModalBuild.ModalTypes.HERO_SHOW:
                 hero = App.Crew[id];
                 content += App.ModalBuild.widestartText;
                 content += App.ModalBuild.startCloseText;
@@ -611,6 +647,9 @@ var App = {
                 content += "<p>Rank: " + hero.getRank() + "</p>";
                 content += "<p>Gear Level: " + hero.getGearLevel() + "</p>";
                 content += "<p>Current Mission: " + hero.getCurrentMission() + "</p>";
+                break;
+            case App.ModalBuild.ModalTypes.HERO_SELECT:
+
                 break;
             case App.ModalBuild.ModalTypes.MESSAGE:
                 content += App.ModalBuild.normalstartText;
@@ -645,7 +684,11 @@ var App = {
         }
         console.log("Generating " + enemyCount + " enemies");
         for (i = 0; i < enemyCount; i++) {
-            mission.addEnemy(App.GenerateEnemy());
+            newEnemy = App.GenerateEnemy();
+            newEnemy.setID(App.Enemies.length);
+            newEnemy.setMissionID(mission.id)
+            App.Enemies.push(newEnemy);
+            mission.addEnemy(newEnemy.getID());
         }
         heroCount = enemyCount;
         if (enemyCount > 1 && getRandomInt(0, 10) > 7) heroCount--;
@@ -739,15 +782,13 @@ var App = {
         this.desc = "";
         this.missionType = -1;
         this.duration = -1;
-        this.enemyList = [];
         
-        // CrewList, ThreatList, and AbilityList store the integer ids
-        // of the crew, threats, and abilities, respectively. 
+        // CrewList, ThreatList, EnemyList, and AbilityList store the integer ids
+        // of the crew, threats, enemies, and abilities, respectively. 
         // Since these are set, we can just index into their instances.
-        // Enemies are dynamically generated per mission, though, so we store
-        // the whole enemy structure in the EnemyList array.
         this.crewList = [];
         this.threatList = [];
+        this.enemyList = [];
         this.abilityList = [];
 
         this.maxCrew = 1;
@@ -786,6 +827,9 @@ var App = {
         }
         this.setCrewNeeded = function(num) {
             this.maxCrew = num;
+        }
+        this.getCrewNeeded = function() {
+            return this.maxCrew;
         }
         this.setEnemies = function(enemies) {
             if (Array.isArray(enemies)) {
@@ -871,6 +915,7 @@ var App = {
     },
 
     Crewmember: function() {
+        this.id = -1;
         this.cName = "";
         this.abilities = [];
         this.specialization = -1;
@@ -879,6 +924,12 @@ var App = {
         this.gearLevel = 0;
         this.rank = 0;
         this.missionID = -1;
+        this.setID = function(_id) {
+            this.id = _id;
+        }
+        this.getID = function() {
+            return this.id;
+        }
         this.getName = function() {
             return this.cName;
         }
@@ -995,11 +1046,19 @@ var App = {
     },
 
     Enemy: function() {
+        this.id = -1;
         this.eName = "";
         this.abilities = [];
         this.level = 1;
         this.rank = 0;
         this.gearLevel = 0;
+        this.missionId = -1;
+        this.setID = function(_id) {
+            this.id = _id;
+        }
+        this.getID = function() {
+            return this.id;
+        }
         this.setName = function(name) {
             this.eName = name;
         }
@@ -1060,6 +1119,12 @@ var App = {
                 this.rank++;
                 amountToIncrease--;
             }
+        }
+        this.setMissionID = function(_id) {
+            this.missionId = _id;
+        }
+        this.getMissionID = function() {
+            return this.missionId;
         }
     },
 
