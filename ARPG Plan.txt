@@ -1,0 +1,31 @@
+ARPG Clicker Design:
+
+Emphases:
+    - Loot
+        - Crafting
+        - Upgradable
+        - Set bonuses
+    - Customization
+        - Character classes offer different playstyles
+        - Skills can be upgraded and customized
+    - Replayability
+        - Different character classes and builds offer different experiences
+
+Creating tension in choices helps create unique playthroughs and expands player choice/influence on game.
+Classes should offer unique feels to play.
+    - Heavy, soldier-type attacks slower, much less (or no) avoidance, but large absorbs, even invuln for a time.
+        Sword-n-board/guardian archetype emphasizes survivability, at a bit of damage tradeoff. The "safe" choice.
+        Two-hander/reaver archetype emphasizes risk/reward. Damage increases as health decreases. The "risky" choice.
+        - Favors heavy armor and weapons, shields, two-handers
+        - Abilities around mitigation, reducing heavy armor penalties, brute force
+    - Light, rogue-type attacks quickly, at most mid-mitigation, much more avoidance
+        Rogue archetype emphasizes dodging around enemy attacks and finding weak points. The "risky" choice.
+        Ranger archetype emphasizes ranged combat and pet/trap damage. The "safe" choice.
+        - Favors light to medium armor, bows, guns, daggers, 1-hand weapons, spears
+        - Abilities around avoidance, attack speed, critical damage, finesse
+    - Mage-type attacks from "range" (how to model?), avoids melee range altogether
+        Elementalist archetype emphasizes magical damage to destroy foes. The "safe" choice.
+        Bloodmage archetype emphasizes risk/reward, spending health to restore mana and deal damage. "Risky" choice.
+        Loremaster archetype emphasizes healing and buffs/debuffs, strong survivability at some damage cost. "Safe" choice.
+        Illusionist archetype emphasizes illusory weapons and pets, as well as enemy debuffs. "Risky" choice.
+

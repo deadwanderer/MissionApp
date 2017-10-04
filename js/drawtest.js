@@ -229,6 +229,9 @@ var App = {
                 } 
                 crewMember.addAbility(secondAbility);
             }
+            crewMember.setLevel(Math.floor(Math.random() * 100) + 1);
+            crewMember.setGearLevel(Math.floor(Math.random() * 500));
+            crewMember.setRankLevel(Math.floor(Math.random() * App.Rank.length));
             App.Crew.push(crewMember);
         }
     },
@@ -306,7 +309,9 @@ var App = {
             }
             document.getElementById(id + "abilities").innerHTML = abilityText;
             document.getElementById(id + "level").innerHTML = App.Crew[ci].getLevel();
-            document.getElementById(id + "rank").innerHTML = App.Crew[ci].getRank();
+            rank = App.Crew[ci].getRank();
+            document.getElementById(id + "rank").innerHTML = rank == "none" ? "" : rank;
+            addClass(document.getElementById(id + "rank"), rank.toLowerCase());
             document.getElementById(id + "gear").innerHTML = App.Crew[ci].getGearLevel();
             document.getElementById(id + "mission").innerHTML = App.Crew[ci].getCurrentMission();            
         }
@@ -317,7 +322,7 @@ var App = {
             mission = App.AvailableMissions[s];
             id = "vm" + s;
             document.getElementById(id+"name").innerHTML = mission.getName();
-            addClass(document.getElementById(id+"name"), mission.getMissionType().getName().toLowerCase())
+            addClass(document.getElementById(id+"name"), mission.getMissionType().getName().toLowerCase());
             document.getElementById(id+"length").innerHTML = timeFormat(mission.getDuration());
             document.getElementById(id+"enemies").innerHTML = mission.getEnemies().length;
             party = "";
@@ -599,7 +604,7 @@ var App = {
                 content += "<h4>Abilities</h4>";
                 abilities = hero.getAbilities();
                 for (i = 0; i < abilities.length; i++) {
-                    content += "<h5>" + App.HeroAbilities[abilities[i]].getName() + "</h5>";
+                    content += "<h5>" + App.HeroAbilities[abilities[i]].getName() + " (" + App.HeroAbilities[abilities[i]].getAbilityType().getName() + ")</h5>";
                     content += "<p>" + App.HeroAbilities[abilities[i]].getDescription() + "</p>";
                 }
                 content += "<p>Level: " + hero.getLevel() + "</p>";
@@ -657,6 +662,7 @@ var App = {
     GenerateMissionRequirements: function() {
         console.log("Generating mission requirements.");
         reqs = new App.Requirements();
+        currStats = App.GetCurrCrewStats();
         rnd = getRandomInt(0, 10);
         if (rnd > 7) {
             reqs.setGearLevel(getRandomInt(1, 51) * 10);
@@ -666,6 +672,49 @@ var App = {
             reqs.setLevel(getRandomInt(1, App.MaxLevel + 1));
         }
         return reqs;
+    },
+
+    GetCurrCrewStats: function() {
+        stats = new App.Requirements();
+        stats.setGearLevel(0);
+        stats.setRankLevel(0);
+        stats.setLevel(1);
+        stats.setMinLevel(App.MaxLevel);
+        crew = App.GetAvailableCrew();
+        for (var i = 0; i < crew.length; i++) {
+            member = App.Crew[crew[i]];
+            if (member.rank > stats.getRankLevel()) {
+                stats.setRankLevel(member.rank);
+            }
+            if (member.gearLevel > stats.getGearLevel()) {
+                stats.setGearLevel(member.gearLevel);
+            }
+            if (member.level > stats.getLevel()) {
+                stats.setLevel(member.level);
+            }
+            if (member.level < stats.getMinLevel()) {
+                stats.setMinLevel(member.level);
+            }
+        }
+        return stats;
+    },
+
+    DisplayCurrStats: function() {
+        curStats = App.GetCurrCrewStats();
+        statText = "Min Level: " + curStats.getMinLevel();
+        statText += "<br />Max Level: " + curStats.getLevel();
+        statText += "<br />Gear Level: " + curStats.getGearLevel();
+        statText += "<br />Rank Level: " + curStats.getRankLevel();
+        document.getElementById("currStats").innerHTML = statText;
+    },
+
+    GetAvailableCrew: function() {
+        a = [];
+        for (var ctr = 0; ctr < App.Crew.length; ctr++) {
+            if (App.Crew[ctr].isOnMission()) continue;
+            a.push(ctr);
+        }
+        return a;
     },
 
     GenerateCosts: function(count) {
@@ -933,7 +982,7 @@ var App = {
         this.getRankLevel = function() {
             return this.rank;
         }
-        this.setRank = function(rank) {
+        this.setRankLevel = function(rank) {
             if (rank < 0) rank = 0;
             if (rank >= App.Rank.length) rank = App.Rank.length - 1;
             this.rank = rank;
@@ -1096,7 +1145,7 @@ var App = {
         this.tName = name;
         this.desc = desc;
         this.getName = function() {
-            return this.name;
+            return this.tName;
         }
         this.getDescription = function() {
             return this.desc;
@@ -1111,6 +1160,7 @@ var App = {
         this.level = 0;
         this.gearLevel = 0;
         this.rankLevel = 0;
+        this.minLevel = App.MaxLevel + 1;
         this.setLevel = function(lev) {
             if (lev < 1) lev = 1;
             if (lev > App.MaxLevel) lev = App.MaxLevel;
@@ -1118,6 +1168,14 @@ var App = {
         }
         this.getLevel = function() {
             return this.level;
+        }
+        this.setMinLevel = function(lev) {
+            if (lev > App.MaxLevel) lev = App.MaxLevel;
+            if (lev < 1) lev = 1;
+            this.minLevel = lev;
+        }
+        this.getMinLevel = function() {
+            return this.minLevel;
         }
         this.setGearLevel = function(lev) {
             this.gearLevel = lev;

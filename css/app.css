@@ -61,3 +61,19 @@
     width: 64px;
     height: 64px;
 }
+
+.none {
+    color: white;
+}
+.apprentice {
+    color: mediumseagreen;
+}
+.skilled {
+    color: aqua;
+}
+.master {
+    color: blueviolet;
+}
+.champion {
+    color: maroon;
+}
