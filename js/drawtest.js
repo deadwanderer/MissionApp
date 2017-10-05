@@ -658,11 +658,10 @@ var App = {
                 for (i = 0; i < heroes.length; i++) {
                     hero = App.Crew[heroes[i]];
                     content += "<div class='heroSelect'>";
-                    content += ""
-
+                    content += "<h5>" + hero.getName() + "</h5>";
                     content += "</div>";
                 }
-                acceptFunc = "App."
+                //acceptFunc = "App."
                 break;
             case App.ModalBuild.ModalTypes.MESSAGE:
                 content += App.ModalBuild.normalstartText;
@@ -671,7 +670,7 @@ var App = {
             default:
                 return "ModalType " + caller + " not found.";                
         }
-        content += App.ModalBuild.endTextLast;
+        content += App.ModalBuild.endTextFirst;
         if (acceptFunc != "") {
             content += acceptFunc;
         } else {
@@ -878,6 +877,7 @@ var App = {
                 return;
             }
             this.crewList.push(crewmember);
+            App.Crew[crewmember].setCurrentMission(this.id);
             for (i = 0; i < App.Crew[crewmember].abilities.length; i++) {
                 this.abilityList.push(App.Crew[crewmember].abilities[i]);
             }

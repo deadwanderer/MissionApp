@@ -41,6 +41,7 @@ BASIC FLOW:
     - Remove started mission from available missions list, add started mission to current missions list. Flag mission's crew members as on mission. 
 
 Crew members have a specialization that grants them extra success chance on certain mission types (perhaps just a chance of specialization, rather than locking each to a spec?). Ranking up grants (guaranteed?) additional specializations, or strengthening of existing spec. Perhaps 60% chance to increase existing, 40% chance to add additional spec.
+Specs can be retrained for a cost in gold and time.
 
 Crew members also have one to several abilities (tied to spec at all? Additional granted by spec?). These can counter enemy threats on missions. Each ability can counter one threat.
 
