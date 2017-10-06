@@ -328,6 +328,7 @@ var App = {
             rank = App.Crew[ci].getRank();
             document.getElementById(id + "rank").innerHTML = rank == "none" ? "" : rank;
             addClass(document.getElementById(id + "rank"), rank.toLowerCase());
+            addClass(document.getElementById(id + "name"), rank.toLowerCase());
             document.getElementById(id + "gear").innerHTML = App.Crew[ci].getGearLevel();
             document.getElementById(id + "mission").innerHTML = App.Crew[ci].getCurrentMission();            
         }
