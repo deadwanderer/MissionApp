@@ -145,8 +145,6 @@ var App = {
         //App.SpawnCounter();
         App.GenerateCrew();
         App.GenerateMissions();
-        console.log("Missions to generate: " + App.MissionsToGenAtInit);
-        console.log("Missions generated: " + App.AvailableMissions.length);
         window.requestAnimationFrame(App.Loop);        
     },
 
@@ -241,17 +239,14 @@ var App = {
     },
 
     GenerateMissions: function() {
-        console.log("Missions to generate: " + App.MissionsToGenAtInit);
         for (index = 0; index < App.MissionsToGenAtInit; index++) {
             missionId = index + 1;
-            console.log("Beginning generation of mission " + (missionId));
             mission = App.GenerateMission(missionId);
             App.AvailableMissions.push(mission);
         }
     },
 
     GenerateEnemy: function() {
-        console.log("Generating enemy " + App.EnemyID);
         enemy = new App.Enemy();
         enemy.setName("Enemy " + App.EnemyID++);
         ability = getRandomInt(0, App.EnemyAbilities.length);
@@ -346,9 +341,9 @@ var App = {
             partyList = mission.getCrew();
             if (partyList.length == 0) party = "None";
             else {
-                party = partyList[0].getName();
+                party = App.Crew[partyList[0]].getName();
                 for (g = 1; g < partyList.length; g++) {
-                    party += ", " + partyList[g].getName();
+                    party += ", " + App.Crew[partyList[g]].getName();
                 }
             }
             document.getElementById(id+"party").innerHTML = party;
@@ -588,6 +583,11 @@ var App = {
         $(document.body).addClass('vex-open');
     },
 
+    RefreshModal: function(type, id, available) {
+        console.log("Refreshing modal");
+        $(document.body.lastChild).html(App.ConstructModal(type, id, available));
+    },
+
     ConstructModal: function(caller, id, available) {
         content = "";
         acceptFunc = "";
@@ -612,8 +612,16 @@ var App = {
                 content += "</div>";
                 content += "<h4>Heroes</h4>";
                 content += "<div class='heroSelect'>";
+                currCrew = mission.getCrew();
+                console.log("currCrew: " + currCrew.length);
                 for (x = 0; x < mission.getCrewNeeded(); x++) {
-                    content += "<a href='#' onclick='App.ShowModal(App.ModalBuild.ModalTypes.HERO_SELECT, "+x+", false);'><img src='img/nochar.png' class='portrait' /></a>";
+                    console.log("x: " + x);
+                    if(x < currCrew.length) {
+                        console.log("Should be crewmember " + x);
+                        content += "<a href='#' onclick='App.ShowModal(App.ModalBuild.ModalTypes.HERO_SHOW, "+id+", false);'><img src='img/crew.png' class='portrait' /></a>";
+                    } else {
+                        content += "<a href='#' onclick='App.ShowModal(App.ModalBuild.ModalTypes.HERO_SELECT, "+id+", false);'><img src='img/nochar.png' class='portrait' /></a>";
+                    }
                 }
                 content += "</div>";
                 content += "<p>Reqs: " + mission.getRequirements().getReqText() + "</p>";
@@ -658,7 +666,7 @@ var App = {
                 content += App.ModalBuild.startCloseText;
                 for (i = 0; i < heroes.length; i++) {
                     hero = App.Crew[heroes[i]];
-                    content += "<div class='heroSelect'>";
+                    content += "<div class='heroSelect' onclick='App.AssignCrew("+i+","+id+");'>";
                     content += "<h5>" + hero.getName() + "</h5>";
                     content += "</div>";
                 }
@@ -685,14 +693,21 @@ var App = {
         $(document.body.lastChild).addClass('vex-closing');
         window.setTimeout(function() {
             document.body.removeChild(document.body.lastChild);
-        }, 500);
-        if(App.Modals-- == 1) {
+        }, 400);
+        if(App.Modals-- == 0) {
             $(document.body).removeClass('vex-open');
         }
     },
 
+    AssignCrew: function(crewId, missionId) {
+        App.AvailableMissions[missionId].addCrew(crewId);
+        App.HideModal();
+        window.setTimeout(function() {
+            App.RefreshModal(App.ModalBuild.ModalTypes.MISSION, missionId, true);
+        }, 500);
+    },
+
     GenerateMission: function(id) {
-        console.log("Generating mission " + id);
         mission = new App.Mission(id);
         mission.setName("Mission " + id);
         mission.setType(getRandomInt(0, App.MissionTypes.length));
@@ -701,7 +716,6 @@ var App = {
         if (getRandomInt(0, 10) > 7) {
             enemyCount = getRandomInt(2, 6);
         }
-        console.log("Generating " + enemyCount + " enemies");
         for (i = 0; i < enemyCount; i++) {
             newEnemy = App.GenerateEnemy();
             newEnemy.setID(App.Enemies.length);
@@ -722,7 +736,6 @@ var App = {
     },
 
     GenerateMissionRequirements: function() {
-        console.log("Generating mission requirements.");
         reqs = new App.Requirements();
         currStats = App.GetCurrCrewStats();
         rnd = getRandomInt(0, 10);
@@ -780,14 +793,12 @@ var App = {
     },
 
     GenerateCosts: function(count) {
-        console.log("Generating costs.");
         costType = getRandomInt(0, App.ResourceType.length);
         costAmount = getRandomInt(5, 35) * count;
         return new App.Cost(costType, costAmount);
     },
 
     GenerateReward: function() {
-        console.log("Generating rewards.");
         reward = new App.Reward();
         reward.setRewardAmount(getRandomInt(App.Resources.resourceMin, App.Resources.resourceMax) * App.Resources.resourceMult);
         reward.setRewardType(getRandomInt(0, App.ResourceType.length));
@@ -884,6 +895,7 @@ var App = {
             }
         }
         this.removeCrew = function(crewmember) {
+            App.Crew[crewmember].leaveMission();
             crewIndex = this.crewList.indexOf(crewmember);
             if (crewIndex >= 0) {
                 this.crewList.splice(crewIndex, 1);

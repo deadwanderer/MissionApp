@@ -614,6 +614,10 @@ var App = {
             0, 2, 3,28,28,28,28,28, 7, 8, 9,10,0, 2, 3,28,28,28,28,28, 7, 8, 9,10,
         ],
         getTile: function(col, row) {
+            if (col < 0) col = 0;
+            if (col >= this.cols) col = this.cols - 1;
+            if (row < 0) row = 0;
+            if (row >= this.rows) row = this.rows - 1;
             return this.tiles[row * this.cols + col];
         }
     },
@@ -657,7 +661,6 @@ var App = {
     ElapsedTime: 0,
 
     ClearCurrActor: function() {
-        console.log("ClearCurrActor clicked.");
         App.ReadyActorIDs.splice(App.ReadyActorIDs.indexOf(App.CurrActor), 1);
         if (App.ReadyActorIDs.length == 0) {
             App.CurrActor = -1;
@@ -673,25 +676,24 @@ var App = {
                 }
             }
         }
-        console.log("Ready actors: " + App.ReadyActorIDs.length);
     },
 
     Init: function() {
         App.Time.currTime = Date.now();
         App.Time.lastTime = Date.now();
-        /*
         App.LoadImages();
         Keyboard.listenForEvents([Keyboard.LEFT, Keyboard.RIGHT, Keyboard.UP, Keyboard.DOWN]);
         var c = document.getElementById("battle");
         c.width = App.Canvas.width;
         c.height = App.Canvas.height;
         App.Ctx = c.getContext('2d');
-        */
         if (App.Ticker === null) {
             App.Ticker = window.setTimeout(App.Loop, App.Time.seconds / (App.Params.Focused ? App.Time.focusFPS : App.Time.blurFPS));
         }
+        
         /*
         console.log(App.Camera.maxX() + ", " + App.Camera.maxY());
+
         output = "";
         for (i = 0; i < CODES.length; i++) {
             outputEnc = base64Encode(CODES.charAt(i));
@@ -741,7 +743,6 @@ var App = {
 */
 
     Logic: function() {
-        /*
         var dirx = 0;
         var diry = 0;
         if (Keyboard.isDown(Keyboard.LEFT)) { dirx = -1; }
@@ -750,8 +751,7 @@ var App = {
         if (Keyboard.isDown(Keyboard.DOWN)) { diry = 1; }
 
         App.Camera.move(dirx, diry);
-        */
-
+        /*
         console.log(App.WaitingOnActor);
         if(!App.WaitingOnActor) {
             var minTime = Number.MAX_VALUE;
@@ -804,9 +804,10 @@ var App = {
                     }
                 }
             }
-        /*
+        
         App.UpdateTimers();
         App.CullLog();
+        
         if (App.Time.elapsedSinceSpawn > App.Time.spawnTime) {
             App.SpawnCounter();
             App.Time.elapsedSinceSpawn = 0;
@@ -816,16 +817,17 @@ var App = {
 
     Draw: function() {
         App.DrawTitle();
+        
+        /*  
         App.DrawActors();
         
-           
-
-        /*    
-        App.DrawMap(); 
         App.DrawCounters();
         App.DrawResources();        
         App.DrawLog();
-        */
+        */         
+
+          
+        App.DrawMap(); 
     },
 
     DrawActors() {
@@ -851,9 +853,9 @@ var App = {
 
     DrawMap: function() {
         var startCol = Math.floor(App.Camera.x / App.Map.tsize);
-        var endCol = startCol + (App.Camera.width / App.Map.tsize);
+        var endCol = Math.min(startCol + Math.floor(App.Camera.width / App.Map.tsize)+2, App.Map.cols * App.Map.tsize);
         var startRow = Math.floor(App.Camera.y / App.Map.tsize);
-        var endRow = startRow + (App.Camera.height / App.Map.tsize);
+        var endRow = Math.min(startRow + Math.floor(App.Camera.height / App.Map.tsize)+2, App.Map.rows * App.Map.tsize);
         var offsetX = -App.Camera.x + startCol * App.Map.tsize;
         var offsetY = -App.Camera.y + startRow * App.Map.tsize;
 

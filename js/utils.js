@@ -67,7 +67,6 @@ Keyboard._onKeyDown = function(event) {
     if (keyCode in this._keys) {
         event.preventDefault();
         this._keys[keyCode] = true;
-        console.log("Key down: " + keyCode);
     }
 }
 
@@ -76,7 +75,6 @@ Keyboard._onKeyUp = function(event) {
     if (keyCode in this._keys) {
         event.preventDefault();
         this._keys[keyCode] = false;
-        console.log("Key up: " + keyCode);
     }
 }
 
