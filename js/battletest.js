@@ -160,7 +160,7 @@ var App = {
         { id: 117, x: 8, y: 4, name: "stone_3" },
         { id: 118, x: 9, y: 4, name: "stone_4" },
         { id: 119, x: 10, y: 4, name: "cobblestone_1" },
-        { id::120, x: 11, y: 4, name: "snow_1" },
+        { id: 120, x: 11, y: 4, name: "snow_1" },
         { id: 121, x: 12, y: 4, name: "grass_1" },
         { id: 122, x: 13, y: 4, name: "grass_2" },
         { id: 123, x: 14, y: 4, name: "grass_3" },
