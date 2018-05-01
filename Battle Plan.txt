@@ -125,3 +125,108 @@ Should the attacker calculate damage when doing an attack, then submit AttemptAt
     Or would it just be better for the game to handle the whole thing with a ResolveAttack(attacker, target) call that handles it all? Is there really any difference?
 
     What about AOE attacks? Need to roll attack from attacker for each target, then each target individually calcs mitigation.
+
+
+Systems:
+    Event System
+    Quest System
+        - Quests can be given from NPCs, started from certain items, and auto-start from entering an area, killing certain enemies, or from a timer or something.
+        - Need to support quest completion from the same sources.
+    Battle System
+    Encounter System
+        - Encounter Load
+        - Random Encounters
+        - Custom Encounters    
+    Cutscene/Story System
+    Save/Load System
+    Leveling/XP System
+        - Characters have multiple rarities, which can be upgraded.
+        - Highest level(s) locked behind max-level raid and hardmode raid
+        - Max level is 100, which unlocks raid and hardmode dungeons.
+
+Mechanics: 
+    Abilities
+        - Character and enemy combat abilities.
+        - These may include immunities, buffs, debuffs, direct damage/heal, heal/damage over time, taunts, or some combination thereof.
+        - These are actively chosen or activated during battle.
+    Auras
+        - Auras are passive effects that are present throughout the duration or some portion of a battle. 
+        - These may include buffs or debuffs to characters or enemies from some character or enemy present on the battlefield, a buff or debuff applied by a particular battle location (e.g. slow applied from a swamp location, or damage over time effect applied by lava location).
+    Combos
+        - A combo could be an extra effect or intensified effect which triggers from a number of different causes, including the presence of some other effect on the target (burning or bleeding, for example), the presence of some other unit on the battle field (enrage against wolves).
+    Crafting
+    Upgrades
+    Inventory
+    Character/Equipment
+        - Loot 
+        - Loot tables
+        - Equipment/stats
+
+World:
+    Plot
+        - Generally, you are a disgraced prince or princess, unfairly robbed of your throne by your conniving siblings on your father's death. You escape death, but are forced to start from nothing, washed up on the shore of a village in the hinterlands. You work to build and rebuild support, gaining an army of heroes and building bases of support to provide food, weapons, armor, and enhancements. Eventually, you gain enough power to challenge your siblings and take your rightful place as leader of your land.
+    Locations
+        - The Royal Castle. (your ultimate destination)
+        - The Hinterlands. (your humble beginnings)
+        - A deep cave system, leading to...
+        - An underground fortress, home of ancient warriors.
+        - The Shrouding Weald, a foggy woods, hiding...
+        - Lucar's Necropolis, an ancient stone redoubt, home of necromancy and its spawn.
+    Unlocks
+    Characters
+    Dungeons 
+        - Dungeons provide increased challenge and increased reward quality while leveling. 
+        - Hard-mode dungeons begin unlocking at level 50, with Champion mode dungeons available at 100 for pre-raid to (some) normal-raid-level gear and materials.
+    Raids
+        - After taking back your throne in a climactic battle at level cap, you find a deep fortress hidden beneath your castle, built by your ancestors in secret to imprison dragons and ancient powers. Your siblings disregarded the warnings and sought to tame and unleash these powerful entities, but only succeeded at the latter. Your band must put down these powerful foes before they destroy the whole world.
+        - Level 100 content, provides extra challenge and progression after level cap. 
+        - Highest levels of gear and materials can only be obtained from raid.
+        - Hardmode unlocks after defeating regular mode (boss by boss, or beat whole normal mode raid to unlock hard raid?), with an additional tier from hardmode only.
+    Maps
+    Procedural Generation (of maps, encounters, loot)
+
+Battle System:
+    Click to select/highlight
+    Click to target enemy
+    Move to enemy
+    Basic attack
+    Turns
+        - The turn system uses a weapon-attack-speed system, where weapons have a set weapon attack speed, modified by wielder stats and abilities. 
+        - Next turn is determined by who's weapon is ready to attack next.
+    Selectable Abilities
+    Health/death
+    Resolve Battle
+    UI (health, mana, skills, effects)
+
+Item System:
+    Item types
+        - Equippable
+            - Weapons
+            - Armor
+            - Accessories
+        - Usable
+            - Potions
+            - Flasks
+            - Food/drink
+        - Ingredients/Crafting
+            - Plants/herbs for potions and Flasks
+            - Ore for metalsmithing
+            - Lumber for woodcrafting
+            - Cloth for weaving
+            - Gems/Metals for jewelcrafting and inlays
+            - Essences/ether for enchanting
+            - Plants/meat/spices for cooking
+    Item Affixes
+        - When crafting/generating equipment, affixes are the stats and abilities that generate on an item. These are also applied by enchantments, gems, and inlays.
+        - Need to differentiate between enchantments, gems, and inlays. Certain affixes only come from certain sources (gems enhance stats, enchantments add special abilities or effects, inlays...?)
+    Item Upgrades
+        - Gear upgrades: requires shards to improve through three tiers for each ranking.
+        - Require special mat to ascend to next tier?
+            - Worn (grey) (normal drop from enemies)
+            - Functional (white) (base crafted level)
+            - Proven (green)
+            - Storied (blue) (highest level drop from non-boss enemies)
+            - Ancient (purple) (highest level drop from bosses (endgame bosses))
+            - Artifact (red)  (shards drop from normal endgame)
+            - Ascendant (orange) (Highest tier) (shards drop from heroic endgame)
+    Item Crafting
