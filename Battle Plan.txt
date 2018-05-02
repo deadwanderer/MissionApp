@@ -230,3 +230,27 @@ Item System:
             - Artifact (red)  (shards drop from normal endgame)
             - Ascendant (orange) (Highest tier) (shards drop from heroic endgame)
     Item Crafting
+
+    
+Main Program Flow:
+
+Start up game
+New game -- Continue (from last save, if exists) -- Load/save
+
+Character creation?
+
+Main game states:
+World (general map, moving between specific settings)
+Area (specific map, exploration of certain specific setting)
+Battle (arena, only place where actual combat takes place)
+Camp (place to rest, craft, gear up, etc)
+Menu (single manager for all menus, or individual states/screens for each menu?)
+
+Menu screens:
+Main/Start menu (new, load, continue, options, exit)
+Character/game create menu
+Options menu(s)
+Load/Save menu
+Pause menu
+Inventory menu
+Quest menu
