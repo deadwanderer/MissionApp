@@ -1,0 +1,89 @@
+.myProgress {
+    position: relative;
+    width: 250px;
+    height: 25px;
+    background-color: grey;
+    border: 3px solid black;
+    border-radius: 7px;
+    text-align: center;
+    z-index: 1;
+}
+.myBar {
+    position: absolute;
+    height: 100%;
+    background-color: rgb(50, 205, 50);
+    border-right: 2px solid black;
+    border-radius: 5px;
+    z-index: 2;
+}
+.barText {
+    position: absolute;
+    margin: 0 auto;
+    margin-top: -3px;
+    margin-left: -15px;
+    z-index: 3;
+}
+.flashProgress {
+    border-color: white;
+    visibility:hidden;
+}
+.flashBar {
+    border-color: white;
+    visibility:visible;
+}
+#log {
+    min-height: 400px;
+}
+#base64 {
+    font-family: "Courier New", serif;
+    color: #ddd;
+    font-size: 18px;
+}
+.kill {
+    color: #e22233;
+}
+.collect {
+    color: gold;
+}
+.defend {
+    color: blueviolet;
+}
+.scout {
+    color: mediumseagreen;
+}
+.ward {
+    color: skyblue;
+}
+.portrait {
+    border: 2px solid black;
+    box-shadow: 5px 5px 2px #222222;
+    border-radius: 5px;
+    width: 64px;
+    height: 64px;
+    margin: 5px;
+}
+.heroSelect {
+    border: 3px solid green;
+    padding: 3px;
+    margin: 5px;
+}
+.enemySelect {
+    border: 3px solid crimson;
+    padding: 3px;
+    margin: 5px;
+}
+.none {
+    color: white;
+}
+.apprentice {
+    color: mediumseagreen;
+}
+.skilled {
+    color: aqua;
+}
+.master {
+    color: blueviolet;
+}
+.champion {
+    color: maroon;
+}
