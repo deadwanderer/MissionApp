@@ -85,29 +85,6 @@ Keyboard.isDown = function(keyCode) {
     return this._keys[keyCode];
 }
 
-CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
-function base64Decode(input) {
-    if (input.length % 4 != 0) {
-        return "Error: invalid base64 input!";
-    }
-    return atob(input);
-    /*
-    output = "";
-    b = ["", "", "", ""];
-    for (var i = 0; i < input.length; i += 4) {
-        b[0] = CODES.indexOf(input.charAt(i));
-        b[1] = CODES.indexOf(input.charAt(i+1));
-        b[2] = CODES.indexOf(input.charAt(i+2));
-        b[3] = CODES.indexOf(input.charAt(i+3));
-    }
-    */
-}
-
-function base64Encode(input) {
-    return btoa(input);
-}
-
 function addClass(el, className) {
     if (el.classList)
 	    el.classList.add(className);

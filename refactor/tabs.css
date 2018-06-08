@@ -1,0 +1,15 @@
+.tab {
+    margin: 10px;
+    padding: 10px;
+
+}
+.link {
+    text-decoration: none;
+    color: black;
+}
+.tabContent {
+    display: none
+}
+.tabContent.active {
+    display: block;
+}
