@@ -139,7 +139,7 @@ Systems:
         - Custom Encounters    
     Cutscene/Story System
     Save/Load System
-    Leveling/XP System
+    Levelling/XP System
         - Characters have multiple rarities, which can be upgraded.
         - Highest level(s) locked behind max-level raid and hardmode raid
         - Max level is 100, which unlocks raid and hardmode dungeons.
@@ -167,15 +167,15 @@ World:
         - Generally, you are a disgraced prince or princess, unfairly robbed of your throne by your conniving siblings on your father's death. You escape death, but are forced to start from nothing, washed up on the shore of a village in the hinterlands. You work to build and rebuild support, gaining an army of heroes and building bases of support to provide food, weapons, armor, and enhancements. Eventually, you gain enough power to challenge your siblings and take your rightful place as leader of your land.
     Locations
         - The Royal Castle. (your ultimate destination)
-        - The Hinterlands. (your humble beginnings)
+        - The Furtherlands. (your humble beginnings)
         - A deep cave system, leading to...
-        - An underground fortress, home of ancient warriors.
+			- An underground fortress, home of ancient warriors.
         - The Shrouding Weald, a foggy woods, hiding...
-        - Lucar's Necropolis, an ancient stone redoubt, home of necromancy and its spawn.
+			- Lucar's Necropolis, an ancient stone redoubt, home of necromancy and its spawn.
     Unlocks
     Characters
     Dungeons 
-        - Dungeons provide increased challenge and increased reward quality while leveling. 
+        - Dungeons provide increased challenge and increased reward quality while levelling. 
         - Hard-mode dungeons begin unlocking at level 50, with Champion mode dungeons available at 100 for pre-raid to (some) normal-raid-level gear and materials.
     Raids
         - After taking back your throne in a climactic battle at level cap, you find a deep fortress hidden beneath your castle, built by your ancestors in secret to imprison dragons and ancient powers. Your siblings disregarded the warnings and sought to tame and unleash these powerful entities, but only succeeded at the latter. Your band must put down these powerful foes before they destroy the whole world.
