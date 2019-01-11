@@ -30,12 +30,16 @@ AbilityType
         Rough Terrain, countered by Cushioned Saddle
         Toll Roads, countered by Friends In High Places
         In The Sticks, countered by Teleport
-
-        Specialization("Bloodlust", "A born warrior, who lives for the onrush of battle.", "Kill")
-        Specialization("Keen Eye", "An eagle-eyed hunter, finder of obscured things.", "Collect")
-        Specialization("Unflinching", "With nerves of steel, this guardian stands unbending.", "Defend")
-        Specialization("Stealthy", "Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape.", "Scout")
-        Specialization("Thaumaturge", "Ancient magics snake in tendrils from the scholar's learned fingertips.", "Ward")
+		
+{
+	"specializations":[
+		{ "name":"Bloodlust", "description":"A born warrior, who lives for the onrush of battle.", "favors":"Kill" },
+		{ "name":"Keen Eye", "description":"An eagle-eyed hunter, finder of obscured things.", "favors":"Collect" },
+		{ "name":"Unflinching", "description":"With nerves of steel, this guardian stands unbending.", "favors":"Defend" },
+		{ "name":"Stealthy", "description":"Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape.", "favors":"Scout" },
+		{ "name":"Thaumaturge", "description":"Ancient magics snake in tendrils from the scholar's learned fingertips.", "favors":"Ward" }
+	]
+}
 
         MissionType("Kill", "Defeat your foes.", "Bloodlust")
         MissionType("Collect", "Find helpful supplies.", "Keen Eye")

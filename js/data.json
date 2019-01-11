@@ -1,0 +1,64 @@
+{
+	"specializations":[
+		{ "name":"Bloodlust", "description":"A born warrior, who lives for the onrush of battle.", "favors":"Kill" },
+		{ "name":"Keen Eye", "description":"An eagle-eyed hunter, finder of obscured things.", "favors":"Collect" },
+		{ "name":"Unflinching", "description":"With nerves of steel, this guardian stands unbending.", "favors":"Defend" },
+		{ "name":"Stealthy", "description":"Just a whisper on the wind, a mere flicker at the edge of vision, quick to the find, and quick to escape.", "favors":"Scout" },
+		{ "name":"Thaumaturge", "description":"Ancient magicks snake in tendrils from the scholar's learned fingertips.", "favors":"Ward" }
+	],
+	"missiontypes":[
+		{"name":"Kill", "description":"Defeat your foes.", "favored":"Bloodlust"},
+        {"name":"Collect", "description":"Find helpful supplies.", "favored":"Keen Eye"},
+        {"name":"Defend", "description":"Repel the invaders.", "favored":"Unflinching"},
+        {"name":"Scout", "description":"Survey new territories.", "favored":"Stealthy"},
+        {"name":"Ward", "description":"Protect against encroaching magic.", "favored":"Thaumaturge"}
+	],
+	"heroabilitytypes":[
+		{"type":"Increased success chance: physical", "description":"Fearless in the fray, unshaken in the onrush, the unbowed strength of the guardian forges victory from daunting odds.", "abilities":["Unbreaking Bulwark", "Storm of Fire", "Melt Steel"] },
+        {"type":"Increased success chance: magic", "description":"Not all magical arts destroy; the wise wizards also use their arcanism to defend and heal their companions, and negate enemy magicks.", "abilities":["Quenching Rain", "Arcane Annulment", "Dispel Magic"] },
+        {"type":"Increased success chance: mental", "description":"Steadying the mind and drawing courage from comrades will steady the hands and draw battle lines more amenable to triumph.", "abilities":["Hymn of Courage", "Heroic Stance", "Death Hath No Fury"] },
+        {"type":"Decreased mission time", "description":"Wise planning, sharp eyes, and preparation aforehand will annul and forestall the obstacles laid by both nature and one's foes.", "abilities":["Scorch", "Invigorate", "Levitate"] },
+        {"type":"Decreased mission cost", "description":"Shrewd tongues, well-placed allies, and judicious use of arcane manipulation can ease both the strife, the journey, and the pocketbook.", "abilities":["Cushioned Saddle", "Friends In High Places", "Teleport"] }
+	],
+	"heroabilities":[
+	    {"name":"Unbreaking Bulwark", "description":"Your blacksmiths have crafted reinforced shields, which your stoutest fighters wield to repulse even the mightiest blows.", "counter":"Crushing" },
+        {"name":"Storm of Fire", "description":"Your mages conjure a whirling tower of flame, cowing the enemy minions into desperate flight.", "counter":"Horde" },
+        {"name":"Melt Steel", "description":"Searing blasts of arcane heat from your mages reduce enemy armor to dripping puddles, revealing the soft flesh beneath, ripe for the cutting.", "counter":"Armored" },
+        {"name":"Quenching Rain", "description":"Your shamans whisper stormwords, bringing great rainshowers to bear on the threatening flames. Soon, only wisps of steam remain.", "counter":"Fireblast" },
+        {"name":"Arcane Annulment", "description":"Energy barriers block the arcane energy, and the blasts bounce harmlessly back into the ether.", "counter":"Arcane Storm" },
+        {"name":"Dispel Magic", "description":"Your mages' guttural phrases send runic lightning blasting through the enemy spellshields, shattering the glimmering defenses.", "counter":"Rune of Aegis" },
+        {"name":"Hymn of Courage", "description":"Your bards' strong voices waft in song over your troops, raising a bold chant to the skies, and bringing courage rushing back to wavering hearts.", "counter":"Intimidate" },
+        {"name":"Heroic Stance", "description":"Your champions plant themselves in fearless bearing, a sturdy example that bolsters your troops and grants fresh boldness.", "counter":"Reaving Shout" },
+        {"name":"Death Hath No Fury", "description":"One of your bards cracks a crude joke about the enemy, and the ensuing laughter cuts through the mental fog, revealing promise of great glory in battle.", "counter":"Aura of Bones" },
+        {"name":"Scorch", "description":"A quick-thinking mage wreathes you in a flash of fire that burns away all bindings, and leaves a nice new sheen on your armor, to boot!", "counter":"Web" },
+        {"name":"Invigorate", "description":"Your commissary brings steaming draughts of sharp liquor, that burns all sluggishness away as it courses through your body.", "counter":"Torpor" },
+        {"name":"Levitate", "description":"Your mages twist space-time briefly, pulling you up from the mire and allowing your company to float to solid ground.", "counter":"Quagmire" },
+        {"name":"Cushioned Saddle", "description":"Your sure-footed horses can pick their way through all dangers of the road, and your saddle's padding prevents soreness at the end of the bumpy day.", "counter":"Rough Terrain" },
+        {"name":"Friends In High Places", "description":"A quick missive to your cousin at court grants you a diplomatic visa, and a full refund for all tolls incurred.", "counter":"Toll Roads" },
+        {"name":"Teleport", "description":"Arcanic stones are expensive, sure, but the portals you open with them to allow instantaneous transfers of supplies are still far cheaper than the price-gouging mule-train owners.", "counter":"In The Sticks" }
+	],
+	"enemyabilitytypes":[
+		{"type":"Reduced success chance: physical", "description":"Overwhelming force cows all but the most stalwart, threatening to turn victory into defeat.", "abilities":["Crushing", "Horde", "Armored"]},
+        {"type":"Reduced success chance: magic", "description":"Neither blade nor bow nor buckler can stand against the ancient rites, and warriors' boldness turns to blanching retreat.", "abilities":["Fireblast", "Arcane Storm", "Rune of Aegis"]},
+        {"type":"Reduced success chance: mental", "description":"Sword and spell cannot avail once fear and doubt enter the mind, and fear of defeat makes defeat all the more certain.", "abilities":["Intimidate", "Reaving Shout", "Aura of Bones"]},
+        {"type":"Increased mission time", "description":"Though courage flags not, both enemies and elements conspire to delay and impede, doing all they may to avoid or postpone the conflict.", "abilities":["Web", "Torpor", "Quagmire"]},
+        {"type":"Increased mission cost", "description":"Strength and steel alone do not win the war; blades do not swing without the backing of pay and provisions.", "abilities":["Rough Terrain", "Toll Roads", "In The Sticks"]}
+	],
+	"enemyabilities":[
+		{"name":"Crushing", "description":"This enemy rains heavy blows upon foes, demolishing armor and breaking bones.", "counter":"Unbreaking Bulwark"},
+        {"name":"Horde", "description":"This enemy has an entourage of footsoldiers, threatening to overwhelm any who approach.", "counter":"Storm of Fire"},
+        {"name":"Armored", "description":"Thick plates of sturdy metals deflect even the fiercest blows, giving blades no purchase and no hope of victory.", "counter":"Melt Steel"},
+        {"name":"Fireblast", "description":"An explosion of flame and heat sears skin and turns armor from protecting shell to infernal entrapment.", "counter":"Quenching Rain"},
+        {"name":"Arcane Storm", "description":"The air glows and cracks with blue-white magic, and eldritch tendrils snake through metal and hide alike, lashing the life beneath.", "counter":"Arcane Annulment"},
+        {"name":"Rune of Aegis", "description":"An impassable barrier of pure mana prevents all foes from approaching the caster.", "counter":"Dispel Magic"},
+        {"name":"Intimidate", "description":"The necklace of scalps, the blood-drenched blade, and the smoldering eyes signal that this enemy harbors great skill in battle, and no mercy for attackers.", "counter":"Hymn of Courage"},
+        {"name":"Reaving Shout", "description":"A fearsome roar that somehow carries both physical and psychic force, chilling the hearts of all who hear it.", "counter":"Heroic Stance"},
+        {"name":"Aura of Bones", "description":"Death seeps in ashen strands from the fingers of this enemy, and foliage withers to dust as they pass.", "counter":"Death Hath No Fury"},
+        {"name":"Web", "description":"Sticky cords wrap around you, encasing your extremities in an entangling mesh.", "counter":"Scorch"},
+        {"name":"Torpor", "description":"A heavy weariness seeps through your blood, and your legs become too heavy to lift. All you want is to close your leaden eyes and leave your toils forever.", "counter":"Invigorate"},
+        {"name":"Quagmire", "description":"The solid grounds suddenly gives way to sucking muck, that grasps at your legs and pulls you down towards its dark and inexorable depths.", "counter":"Levitate"},
+        {"name":"Rough Terrain", "description":"These paths have seen no travelers for an age, and thick roots and vines obscure the sharp rocks and dangerous holes beneath. One wrong step threatens to snap bones and shatter equipment, and your staff balks without hazard pay.", "counter":"Cushioned Saddle"},
+        {"name":"Toll Roads", "description":"Your convoy passes through a foreign country with heavy fees for those who are merely visiting. Next time, maybe buy something while you're passing through!", "counter":"Friends In High Places"},
+        {"name":"In The Sticks", "description":"Your destination lies far from any supply depot, and you are forced to import supplies by mule, whose owners demand a high premium.", "counter":"Teleport"}
+	]
+}
