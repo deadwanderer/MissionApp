@@ -27,7 +27,9 @@ Abilities can be either Targeted or NonTargeted.
 
 Abilities can cause immediate damage/healing, or apply Effects.
 
-Should one-time instant attacks be another type of Effect? Have a type of effect that is analyzed on BattleClock tick (HOT/DOT), and another type analyzed on attack (for attacker and target)?
+Should one-time instant attacks be another type of Effect? Have a type of effect that is analyzed on BattleClock tick (HOT/DOT), and another type analyzed on attack (for attacker and target)? Instant attack needs to apply damage during attack move/animation, can't wait till next clock advance. Could apply 0-time Effect, then tick clock for zero seconds during attack to apply Effect...
+
+... If everything is an Effect, new abilities are easy to create. Just throw some Effects together. 
 
 Effects can be Buffs, Debuffs, HealOverTime, or DamageOverTime,
 
@@ -35,9 +37,11 @@ Buffs and Debuffs can be timed (for the next 20 seconds), or value-based (for th
 
 These can include things like haste/slow, damage dealt/taken increased/decreased, vulnerability/resistance to damage/healing/Effects, stuns, slows, crit, etc.
 
-HealOverTime and DamageOverTime have a max duration (possibly affected by gear/stats/skills), a tickTime (shortened by haste/gear/skills), a damage/healing min and max (actual value chosen at random between min and max each tick), an optional weight (to influence the damage/healing bell curve towards max or min, will default to no-influence value).
+HealOverTime and DamageOverTime have a max duration (possibly affected by gear/stats/skills), a tickTime (shortened by haste/gear/skills), a damage/healing min and max (actual value chosen at random between min and max each tick), an optional weight (to influence the damage/healing bell curve towards max or min, will default to no-influence value). These should have the option for either X damage over Y seconds (where each tick t applies t/Y % of damage/healing) or X damage per tick for Y seconds. In both these cases, X has a chance to crit (meaning the first instance could have a crit on the initial application, meaning that each tick is applying a percentage of a total crit damage. Each tick has an individual chance to crit as well, meaning a potential crit of a crit. Will this over-power crit chance?).
 
-Units may also have passive abilities, called Auras. These are untimed effects that apply for the duration of battle. They are applied at the very start of battle, before the BattleClock starts ticking. They can be the same as Effects, but are not ticked through for time advancement calculations, though they must be checked as part of the "time till attack" calculations if they apply some ticking HOT/DOT or apply on certain events (crits, stuns, heals, etc). Can this be handled behind the scenes by just having them be Effects, with the time being zero or negative?
+Units may also have passive abilities, called Auras. These are untimed effects that apply for the duration of battle. They are applied at the very start of battle, before the BattleClock starts ticking. They can be the same as Effects, but are not ticked through for time advancement calculations, though they must be checked as part of the "time till attack" calculations if they apply some ticking HOT/DOT or apply on certain events (crits, stuns, heals, etc). Can this be handled behind the scenes by just having them be Effects, with the time being zero or negative? Have zero-time effects be instant, and negative-time effects be untimed?
+
+Would like to have proc or chance effects (25% chance for attack to cause bleed, 20% chance of additional attack, chance on dodge to retaliate, etc). 
 
 Different types of elemental damage: 
     Holy: heals for a percentage of damage dealt.
@@ -51,12 +55,12 @@ Equipment cannot be changed after start of battle, so gear stat contributions ca
 
 Stats:
 
-Brawn   (strength): Most melee damage       / parry
-Brains (intellect): Magic damage            / crit chance
-Finesse  (agility): Dagger/bow/gun damage   / dodge
-Faith     (spirit): Resource recovery       / haste
-Vitality (stamina): Health                  / resistance
-Vigor     (energy): Resource capacity       / crit damage
+Brawn   (strength): Most melee damage       / parry (deflection)
+Brains (intellect): Magic damage            / crit chance (serendipity)
+Finesse  (agility): Dagger/bow/gun damage   / dodge (avoidance)
+Faith     (spirit): Resource recovery       / haste (alacrity)
+Vitality (stamina): Health                  / resistance (defense)
+Vigor     (energy): Resource capacity       / crit damage (intensity)
 
 Secondary stats:
 
@@ -120,11 +124,12 @@ Should the attacker calculate damage when doing an attack, then submit AttemptAt
         necrosis: 0,
         effects: [Slow]
         chanceToHit: 90%
-    }), and the target handles whether it hits or not (rolls against attacker chanceToHit, as well as rolling against target dodge/parry chance), and handles any damage mitigation (30% physical reduction, 5% magic vulnerability, etc.) and effects applied, and sends back to the game the actual damage done?
+    }), and the target handles whether it hits or not (rolls against attacker chanceToHit, as well as rolling against target dodge/parry chance), and handles any damage mitigation (30% physical reduction, 5% magic vulnerability, etc.) and effects applied, and sends back to the game the actual damage done? In this case, still need to know info about the target to calculate things like increased damage vs <enemy type>.
 
     Or would it just be better for the game to handle the whole thing with a ResolveAttack(attacker, target) call that handles it all? Is there really any difference?
 
     What about AOE attacks? Need to roll attack from attacker for each target, then each target individually calcs mitigation.
+
 
 
 Systems:
@@ -136,7 +141,7 @@ Systems:
     Encounter System
         - Encounter Load
         - Random Encounters
-        - Custom Encounters    
+        - Custom/Set/Scripted Encounters    
     Cutscene/Story System
     Save/Load System
     Levelling/XP System
@@ -254,3 +259,187 @@ Load/Save menu
 Pause menu
 Inventory menu
 Quest menu
+Camp menu
+Crafting menu
+
+
+
+Classes:					
+
+Class Name: Wildswalker
+	Class archetype/role: ranged archer/pet
+	Class description: A ranged hunter class, using guns or bows. Damage split between weapon and pet(s).
+	Class armor type: Medium leather/mail
+	Class weapon types: Gun, Bow
+	Abilities:
+		Call The Pack: Summon second pet for X turns
+		Rabid Howl: Pet howls, increasing party damage and haste by X% for X turns
+		Withering Fire (Rifleman spec): Extra shots per attack, doubled haste for X turns.
+	Specialization ideas:		
+		Hunter: Uses bow, emphasis on pet damage
+		Rifleman: Uses gun, can't use pets (in fiction, animals are gunshy), attacks from longer range. Is therefore immune to non-boss attacks (except for specifically ranged attacks)
+
+Class Name: Lacerator
+	Class archetype/role: rogue, rapid and dexterous physical melee
+	Class description: Stealthy, rapid attacks, often causes bleeding from deep cuts, finds gaps in enemy armor.
+	Class armor type: Light leather
+	Class weapon types: 
+	Abilities:
+		Lacerate: Attacks cause guaranteed bleed for X turns
+		Exsanguinate: Bleed damage increased by X% for X turns
+		Ninja: Fades into the shadows. Cannot be hit for X turns. Attacks become undefendable (can't be dodged, parried, blocked). Crit chance and damaged increased.
+				(Possibly only greatly reduced chance to be hit, but being hit does double damage on first strike)
+	Specialization ideas:
+		Dual-wield: Uses daggers, less damage per attack, high crit chance, higher bleed chance, faster attacks
+		Samurai: Uses katana, more damage per attack, high crit damage, faster and harder to hit
+		
+Class Name: Leecher
+	Class archetype/role: DOT/debuff magic class
+	Class description: Master of decay, weakens enemy life and resistances, and leeches enemy resources for use by allies
+	Class armor type: Light cloth
+	Class weapon types: Wands, Tomes/Orbs (MH/OH, no 2H)
+	Abilities:
+		Creeping Death: Double periodic dmg for X turns
+		Transfusion: X% of periodic dmg heals all team members for X turns
+		Impending Doom: DOT that ramps up damage as duration nears end. If active at enemy death, explodes to cause healing to allies and damage to enemies
+	Specialization ideas:
+		Necromancer: Specializes in death, sacrifices much healing capability for increased damage and weakening abilities
+		Plague Doctor: Specializes in leeching, increased damage-to-healing capacities. Possibly add blood-mage elements (spend own life-force to increase spell potency?)
+
+Class Name: Controller
+	Class archetype/role: minion magic class/illusionist
+	Class description: Summons minions, and can mind-control enemies (with limitations, e.g. no bosses, no single-target enemies)
+	Class armor type: Light cloth
+	Class weapon types: Wands, Staves, Tomes/Orbs
+	Abilities:
+		Control Mind: Mind-control an enemy for X turns. While controlled, enemy can still be damaged by friendlies, enemies now consider the MC-ed enemy to be their foe, and may target it with attacks.
+		Summon Elemental: Summon an elemental of one of the damage types (Stone: physical, Oak: nature, Rot: necrosis, Ethereal: arcane) for X turns, which does heavy damage of the elemental type.
+		Befuddle: Manipulate an enemy's mind, Disorienting or Blinding them
+	Specialization ideas:
+		Summoner: Increased summons health, damage, and abilities
+		Manipulator: Cannot summon minions, but MC abilities strengthened, additional MC abilities available (such as Hex)					
+
+Class Name: Guardian
+	Class archetype/role: tank
+	Class description: A heavily-armored brute, can take heavy damage and mitigate damage more effectively
+	Class armor type: Heavy
+	Class weapon types: Swords, Axes, Maces, Shields
+	Abilities:
+		Retaliate: Instant retaliation when hit (for half dmg? Own weapon damage, or percentage of damage received? Perhaps weapon damage + modifier based on damage taken. 
+				  	Should this be a learned passive? Possibly activate for 100% chance to retaliate on taking damage)
+		Stone Wall: Complete immunity to dmg for X turns
+		Threaten: Forces enemies to focus on guardian (all attacks for X turns will be done to guardian instead of allies). This ability should probably last a few turns longer than Stone Wall, to have some risk.
+		Rally: Raises party morale, healing for a bit (maybe over several turns?), removing one debuff or DOT per ally, and increasing healing taken by X% for X turns
+	Specialization ideas: (Not sure this one needs specializations? Pretty much, a tank is a tank?)
+		Captain: Sacrifices a bit of damage mitigation abilities for party buffs.
+		Stonemaster: Pure damage mitigation, increased block chance, increased damage resistance
+
+Class Name: Decimator
+	Class archetype/role: heavy weapons strength class
+	Class description: Wields two-handed weapons
+	Class armor type: Heavy
+	Class weapon types: Greatswords, Warhammers, GreatAxes
+	Abilities: 
+		Unstoppable: Attacks ignore armor/resistances for X turns
+		Crusher: Attacks reduce enemy armor
+		Whirlwind: Strike all enemies on the battlefield
+		Shockwave: Attacks cause Stun on target, Disorient on nearby enemies for X turns
+	Specialization ideas:
+		Colossus: Dual-wield 2H weapons, reduced attack speed, can attack with both weapons a very limited # of times per battle (possibly only 1)
+		Destroyer: Wields a single 2H weapon with more power
+
+Class Name: Engineer
+	Class archetype/role: mechanical gun/turret/traps
+	Class description: Master of the mechanized, deploys traps to damage and slow enemies, turrets to harass an area of the battlefield, or dispense medication to allies
+	Class armor type: Medium leather/mail
+	Class weapon types: Guns
+	Abilities:
+		Firepower: Turret dmg increased X% for X turns
+		Tracer Bullets: Increase party hit/crit chance against engineer's next target for X turns
+	Specialization ideas:
+		Mechamaniac: Turret specialization, can summon robot companion
+		Outlander: Trap specialist, can deploy elemental traps to apply vulnerabilities to certain damage types
+
+Class Name: Swordsman
+	Class archetype/role: Dual wield strength class
+	Class description: Dual-wields 1H swords/axes/maces
+	Class armor type: Medium leather/mail
+	Class weapon types: 1H Swords/Axes/Maces
+	Abilities:
+		Hack and Slash: Attack with both weapons every hit for X turns
+		Tor-Blade-o: Unleash a flurry of attacks on next turn
+		Razor Edge: Increase weapon damage and crit chance/damage for X turns
+		Sweeping Strikes: All attacks also hit a nearby enemy for 50% damage for X turns
+	Specialization ideas:
+		Cudgelist: Increased damage and armor penetration, requires axes or maces
+		Sworddancer: Increased sword damage and crit chance, requires swords
+
+Class Name: Elementalist
+	Class archetype/role: straight mage
+	Class description: Manipulates elements to do damage
+	Class armor type: Light cloth
+	Class weapon types: Staves, Wands, Tomes/Orbs
+	Abilities:
+		Incinerate: Burn enemy for X damage, consumes Burning Embers for increased damage
+		Burning Embers: Fire DOT for X turns
+		Choking Ash: Consume Burning Embers DOT to cause Blind/Disorient for X turns (increased duration based on ticks of Embers left?)
+		Ethereal Shards: Fire multiple arcane shards at an enemy over X turns.
+		Arcane Explosion: AOE blast
+		Arcane Storm: AOE DOT
+	Specialization ideas:
+		Pyromancer: Increased fire damage and abilities
+		Arcanist: Specializes in arcane damage and abilities		
+
+Class Name: Lifebringer
+	Class archetype/role: healer
+	Class description: 
+	Class armor type:
+	Class weapon types:
+	Abilities:
+
+	Specialization ideas:		Heal lowest-health team member (other than targeted) for X% of targeted heal	Team heals also do X% dmg to random enemy
+
+Class Name: Hopegiver
+	Class archetype/role: buff/bard class
+	Class description: Inspires teammates through spells and shouts, increasing health, damage, crit, and reducing fumbles and CC effectiveness/duration
+	Class armor type: Light cloth
+	Class weapon types: Wands, Tomes/Orbs
+	Abilities:
+		Inspire: Increases haste, resource regen, crit chance
+		Resolve: Reduces party damage taken by X amount/% for X turns
+		Battle Chant: Increased party damage/crit damage/DOT duration (and damage?) for X turns
+	Specialization ideas:
+					
+
+Class Name: Chronomancer
+	Class archetype/role: buff/debuff class
+	Class description: Manipulates time to speed up HOTs/DOTs, impede enemies, aid friends
+	Class armor type: Light cloth
+	Class weapon types: Staves, Wands, Tomes/Orbs
+	Abilities:
+
+	Specialization ideas:
+	
+					
+Class Name: Naturalist
+	Class archetype/role: Druid/Ice wizard
+	Class description: Transforms into different animals to perform different roles, casts ice magic
+	Class armor type: Light leather
+	Class weapon types: Staves
+	Abilities:
+		Ice Block: Freeze an enemy
+		Blizzard: Increases enemy fumble chance, inflicts nature damage over time
+		Ice Shards: Pelt an enemy with ice shards over X turns, with increased crit chance and damage
+	Specialization ideas:
+		Druid: Can transform into different animals: Bear (tank), Leopard (rogue/melee), Spider (poison/CC)
+		Winterwizard: Can cast ice magic spells
+
+
+Class Name:
+	Class archetype/role: 
+	Class description: 
+	Class armor type:
+	Class weapon types:
+	Abilities:
+
+	Specialization ideas:
