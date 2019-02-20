@@ -136,9 +136,16 @@ Should the attacker calculate damage when doing an attack, then submit AttemptAt
 
 Systems:
     Event System
+		- Area/region/map enter/leave
+		- Trigger zone enter/leave
+		- Battle start/end
+		- Conversation start/end
+		- Quest start/end/advance
+		- Item acquire/drop/equip/unequip
     Quest System
         - Quests can be given from NPCs, started from certain items, and auto-start from entering an area, killing certain enemies, or from a timer or something.
         - Need to support quest completion from the same sources.
+		- Quests can have subquests, and can auto-start other quest(s) upon completion. 
     Battle System
     Encounter System
         - Encounter Load
@@ -150,6 +157,11 @@ Systems:
         - Characters have multiple rarities, which can be upgraded.
         - Highest level(s) locked behind max-level raid and hardmode raid
         - Max level is 100, which unlocks raid and hardmode dungeons.
+	Notification system
+		- Notify of zone entry/discovery
+		- Notify of level-up
+		- Notify of quest acceptance/advancement/completion/availability
+		- Notify of content availability (e.g. raid or dungeon unlock)
 
 Mechanics: 
     Abilities
