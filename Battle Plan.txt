@@ -135,13 +135,51 @@ Should the attacker calculate damage when doing an attack, then submit AttemptAt
 
 
 Systems:
-    Event System
+    World/Explore Event System
 		- Area/region/map enter/leave
 		- Trigger zone enter/leave
 		- Battle start/end
 		- Conversation start/end
 		- Quest start/end/advance
 		- Item acquire/drop/equip/unequip
+		- Level increase
+	Battle Event System
+		- Actor attempt combat action (swing weapon, cast spell)
+			- Actor attempt friendly action
+			- Actor attempt enemy action
+		- Actor successful combat action (deal damage or healing, spell or attack hit)
+			- Actor successful friendly action
+				- Actor successful heal
+				- Actor successful buff
+			- Actor successful enemy action
+				- Actor successful damage
+				- Actor successful debuff
+		- Actor fail combat action 
+			- Actor action missed
+			- Actor action dodged
+			- Actor action parried
+			- Actor action no damage (will this be possible? What if weak attack hits heavy armor?, resisted debuff?)
+		- Actor receive attempted combat action 
+			- Actor receive attempted friendly action
+			- Actor receive attempted enemy action
+			- Actor receive attempted area action (terrain hazards, not enemy AOE)
+		- Actor receive successful combat action (take damage, buff/debuff, receive healing)
+			- Actor receive successful friendly action
+				- Actor receive healing
+				- Actor receive buff
+			- Actor receive successful area effect
+				- healing, buff, damage, debuff
+			- Actor receive successful enemy action
+				- Actor receive damage
+				- Actor receive debuff 
+		- Actor avoid combat action
+			- Actor missed action
+			- Actor dodged action
+			- Actor parried action
+			- Actor no damage action (attack hits, but is completely negated)
+		- Actor kill other
+		- Actor death
+		
     Quest System
         - Quests can be given from NPCs, started from certain items, and auto-start from entering an area, killing certain enemies, or from a timer or something.
         - Need to support quest completion from the same sources.
